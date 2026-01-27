@@ -154,43 +154,23 @@
         </div>
     </section>
 
-    <!-- Modal de Pago -->
-    <div id="payment-modal" class="fixed inset-0 bg-black/95 flex items-center justify-center hidden z-50 p-4">
-        <div class="bg-slate-800 p-8 rounded-xl max-w-md w-full">
-            <h2 class="text-2xl font-bold mb-6 text-gold-400 text-center">Pago Seguro - Plan Básico</h2>
+    <!-- Modal de Pago con Fondo Blanco -->
+    <div id="payment-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-white p-8 rounded-xl max-w-md w-full shadow-lg">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800 text-center">Pago Seguro - Plan Básico</h2>
             <form id="payment-form">
-                <label class="block mb-4">
-                    <span class="text-slate-300">Método de Pago:</span>
-                    <select id="payment-method" class="w-full mt-2 p-2 bg-slate-700 text-white rounded">
-                        <option value="tarjeta">Tarjeta de Crédito</option>
-                        <option value="nequi">Nequi</option>
-                        <option value="daviplata">Daviplata</option>
-                        <option value="pse">PSE</option>
-                    </select>
-                </label>
-                <div id="card-fields" class="space-y-4">
-                    <label class="block">
-                        <span class="text-slate-300">Número de Tarjeta:</span>
-                        <input type="text" placeholder="1234 5678 9012 3456" class="w-full mt-2 p-2 bg-slate-700 text-white rounded" required>
-                    </label>
-                    <label class="block">
-                        <span class="text-slate-300">Fecha de Expiración:</span>
-                        <input type="text" placeholder="MM/YY" class="w-full mt-2 p-2 bg-slate-700 text-white rounded" required>
-                    </label>
-                    <label class="block">
-                        <span class="text-slate-300">CVV:</span>
-                        <input type="text" placeholder="123" class="w-full mt-2 p-2 bg-slate-700 text-white rounded" required>
-                    </label>
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-4 text-gray-700">Opción 1: Medio de Pago</h3>
+                    <div class="space-y-4">
+                        <label class="block">
+                            <span class="text-gray-600">Sub-opción 1: Bancolombia</span>
+                            <input type="text" id="account-number" placeholder="Número de Cuenta (ej. 123-456789-0)" class="w-full mt-2 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gold-500" required>
+                        </label>
+                    </div>
                 </div>
-                <div id="other-fields" class="hidden space-y-4">
-                    <label class="block">
-                        <span class="text-slate-300">Número de Celular (para Nequi/Daviplata):</span>
-                        <input type="text" placeholder="300 123 4567" class="w-full mt-2 p-2 bg-slate-700 text-white rounded">
-                    </label>
-                </div>
-                <button type="submit" class="w-full bg-gold-500 text-slate-900 font-bold py-2 rounded mt-6 hover:bg-gold-400">Confirmar Pago</button>
+                <button type="submit" class="w-full bg-gold-500 text-white font-bold py-2 rounded hover:bg-gold-400">Confirmar Pago</button>
             </form>
-            <button onclick="closePayment()" class="mt-4 text-slate-400 hover:text-white w-full text-center">Cancelar</button>
+            <button onclick="closePayment()" class="mt-4 text-gray-500 hover:text-gray-700 w-full text-center">Cancelar</button>
         </div>
     </div>
 
@@ -240,7 +220,40 @@
             }
         });
 
-        // FUNCIONALIDAD: Lector con control de suscripción
+        // FUNCIONALIDAD: Abrir Modal de Pago
+        function openPayment(plan) {
+            if (plan === 'basico') {
+                document.getElementById('payment-modal').classList.remove('hidden');
+            }
+        }
+
+        // FUNCIONALIDAD: Cerrar Modal de Pago
+        function closePayment() {
+            document.getElementById('payment-modal').classList.add('hidden');
+        }
+
+        // FUNCIONALIDAD: Procesar Pago y Activar Suscripción
+        document.getElementById('payment-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const accountNumber = document.getElementById('account-number').value.trim();
+            if (!accountNumber) {
+                alert('Por favor, ingresa un número de cuenta válido.');
+                return;
+            }
+            // Simulación de pago exitoso
+            alert('Pago procesado exitosamente vía Bancolombia. Suscripción Básica activada.');
+            localStorage.setItem('subscription', 'basico'); // Activar suscripción
+            closePayment();
+        });
+
+        // FUNCIONALIDAD: Lector con Control de Suscripción
         const selectedBooks = ['amor1', 'terror1', 'superacion1', 'clasico1', 'amor3', 'terror3', 'superacion3', 'clasico3', 'amor4', 'terror4']; // 10 libros seleccionados para Básico
         const library = {
-            amor1: "Capítulo 1: El encuentro bajo la lluvia. El destino parecía empeñado en unirlos en aquel café de
+            amor1: "Capítulo 1: El encuentro bajo la lluvia. El destino parecía empeñado en unirlos en aquel café de la Séptima...",
+            amor2: "Había secretos que quemaban más que el sol de mediodía, y ella guardaba el más peligroso de todos...",
+            terror1: "El crujido de la madera no provenía del viento. Algo subía las escaleras con una lentitud aterradora...",
+            terror2: "Nadie en el pueblo hablaba de lo que vivía en el pozo, pero todos dejaban una vela encendida al anochecer...",
+            superacion1: "La montaña no se movió, pero mi determinación sí. Aprendí que el primer paso es siempre el más pesado...",
+            superacion2: "El silencio es tu mejor maestro. En la quietud de la mañana, encontré la voz que había perdido...",
+            clasico1: "Es una verdad mundialmente reconocida que un hombre soltero, poseedor de una gran fortuna...",
+            clasico2: "Muchos años después, frente al pel
