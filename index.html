@@ -3,144 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lectuverso - Biblioteca Digital Protegida</title>
+    <title>Lectuverso | Biblioteca Premium Internacional</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root {
-            --bg-dark: #0f172a;
-            --bg-slate: #334155;
-            --accent-gold: #fbbf24;
-            --accent-white: #ffffff;
-        }
-        body {
-            background-color: var(--bg-dark);
-            color: var(--accent-white);
-            font-family: 'Inter', sans-serif;
-        }
-        * {
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-        }
-        .watermark {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 2rem;
-            color: rgba(255, 255, 255, 0.1);
-            pointer-events: none;
-            z-index: 10;
-            font-weight: bold;
-        }
-        .reader-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
-            background-color: var(--bg-slate);
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .text-gold-400 { color: #fbbf24; }
-        .bg-gold-500 { background-color: #fbbf24; }
+        :root { --gold: #fbbf24; --slate: #1e293b; }
+        body { background: #0f172a; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+        @media print { body { display: none; } }
+        .no-select { user-select: none; -webkit-user-select: none; }
+        /* Animación de carga para el pago */
+        .loader { border-top-color: #fbbf24; animation: spinner 1.5s linear infinite; }
+        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="no-select">
 
-    <header class="bg-slate-900 py-4 shadow-md">
-        <div class="container mx-auto px-4 flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-gold-400">Lectuverso</h1>
-            <nav>
-                <ul class="flex space-x-6">
-                    <li><a href="#hero" class="text-white hover:text-gold-400 transition">Inicio</a></li>
-                    <li><a href="#catalog" class="text-white hover:text-gold-400 transition">Catálogo</a></li>
-                    <li><a href="#plans" class="text-white hover:text-gold-400 transition">Planes</a></li>
-                </ul>
-            </nav>
+    <nav class="p-6 flex justify-between items-center border-b border-white/10">
+        <h1 class="text-2xl font-black text-gold-400 tracking-tighter">LECTUVERSO</h1>
+        <div class="space-x-6 text-sm font-medium">
+            <a href="#" onclick="showSection('hero')" class="hover:text-yellow-500">Inicio</a>
+            <a href="#" onclick="showSection('catalog')" class="hover:text-yellow-500">Catálogo</a>
+            <a href="#" onclick="showSection('plans')" class="hover:text-yellow-500">Suscripciones</a>
         </div>
-    </header>
+    </nav>
 
-    <section id="hero" class="py-20 bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-700 text-center">
-        <div class="container mx-auto px-4">
-            <h2 class="text-5xl font-bold mb-4 text-gold-400">Bienvenido a Lectuverso</h2>
-            <p class="text-xl mb-8 text-slate-300">Lectura protegida y exclusiva.</p>
-            <a href="#catalog" class="bg-gold-500 text-slate-900 px-8 py-3 rounded-lg font-bold hover:bg-gold-400 transition">Explorar Catálogo</a>
+    <section id="hero-section" class="py-20 px-6 text-center">
+        <div class="inline-block px-4 py-1 rounded-full border border-yellow-500/30 text-yellow-500 text-xs font-bold mb-6 tracking-widest uppercase">Global Access v2.0</div>
+        <h2 class="text-6xl font-extrabold mb-6">Lectura sin fronteras, <span class="text-yellow-500">Protección Total.</span></h2>
+        <p class="text-slate-400 max-w-2xl mx-auto mb-10 text-lg">La plataforma líder en habla hispana con blindaje legal internacional (OMPI) para contenido digital exclusivo.</p>
+        <button onclick="showSection('catalog')" class="bg-yellow-500 text-black px-10 py-4 rounded-full font-bold hover:scale-105 transition shadow-lg shadow-yellow-500/20">Acceder al Catálogo Global</button>
+    </section>
+
+    <section id="catalog-section" class="hidden py-10 px-6 min-h-screen bg-white text-slate-900">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex justify-between items-center mb-10">
+                <h2 class="text-4xl font-black italic">Lectuverso <span class="text-yellow-500">Library</span></h2>
+                <button onclick="showSection('hero')" class="bg-slate-900 text-white px-4 py-2 rounded-lg text-sm">Cerrar Sesión</button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="p-10 border-2 border-dashed border-slate-200 rounded-3xl flex flex-col items-center justify-center text-center">
+                    <span class="text-4xl mb-4">📚</span>
+                    <h3 class="font-bold">Añadir Contenido</h3>
+                    <p class="text-xs text-slate-400 mt-2">Sube archivos PDF/EPUB protegidos</p>
+                </div>
+            </div>
         </div>
     </section>
 
-    <section id="plans" class="py-16 bg-slate-900/50">
-        <div class="container mx-auto px-4 text-center">
-            <h3 class="text-3xl font-bold mb-8 text-gold-400">Planes de Suscripción</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-slate-800 p-8 rounded-xl border border-slate-700">
-                    <h4 class="text-2xl font-bold mb-4 text-gold-400">Básico</h4>
-                    <p class="text-3xl font-bold mb-6">$15.000 <span class="text-sm font-normal text-slate-400">/mes</span></p>
-                    <button onclick="openPayment('basico')" class="w-full bg-gold-500 text-slate-900 font-bold py-2 rounded hover:bg-gold-400 transition">Pagar ahora</button>
-                </div>
-                </div>
+    <section id="plans-section" class="hidden py-20 px-6">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold">Planes de Membresía</h2>
+            <p class="text-slate-400 mt-2">Precios ajustados automáticamente a tu región.</p>
+        </div>
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="glass p-8 rounded-3xl border-t-4 border-slate-500">
+                <h3 class="text-xl font-bold mb-4">Plan Esencial</h3>
+                <p class="text-4xl font-black mb-6" id="price-basic">$4.99<span class="text-sm font-normal text-slate-400">/mes</span></p>
+                <button onclick="openPayment('Esencial', 4.99)" class="w-full py-4 bg-white text-black rounded-2xl font-bold hover:bg-yellow-500 transition">Seleccionar Plan</button>
+            </div>
+            <div class="glass p-8 rounded-3xl border-t-4 border-yellow-500 scale-105 shadow-2xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 bg-yellow-500 text-black text-[10px] font-bold px-3 py-1 rounded-bl-lg uppercase">Más Popular</div>
+                <h3 class="text-xl font-bold mb-4 text-yellow-500">Plan Élite Premium</h3>
+                <p class="text-4xl font-black mb-6" id="price-elite">$9.99<span class="text-sm font-normal text-slate-400">/mes</span></p>
+                <button onclick="openPayment('Élite Premium', 9.99)" class="w-full py-4 bg-yellow-500 text-black rounded-2xl font-bold shadow-xl">Seleccionar Plan</button>
+            </div>
+            <div class="glass p-8 rounded-3xl border-t-4 border-blue-500">
+                <h3 class="text-xl font-bold mb-4 text-blue-400">Maestro Global</h3>
+                <p class="text-4xl font-black mb-6" id="price-master">$19.99<span class="text-sm font-normal text-slate-400">/mes</span></p>
+                <button onclick="openPayment('Maestro Global', 19.99)" class="w-full py-4 bg-white text-black rounded-2xl font-bold hover:bg-blue-500 hover:text-white transition">Seleccionar Plan</button>
+            </div>
         </div>
     </section>
 
-    <div id="payment-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center hidden z-50 p-4">
-        <div class="bg-white p-8 rounded-xl max-w-md w-full shadow-2xl">
-            <h2 class="text-2xl font-bold mb-6 text-gray-800 text-center border-b pb-4">Pago Seguro - Lectuverso</h2>
-            <form id="payment-form">
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-semibold mb-2 text-left">Selecciona tu método de pago:</label>
-                    <select id="bank-select" class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-gold-500 text-gray-700" required>
-                        <option value="">-- Elegir banco o billetera --</option>
-                        <option value="Nequi">Nequi</option>
-                        <option value="Daviplata">Daviplata</option>
-                        <option value="Bancolombia">Bancolombia (Ahorros)</option>
-                        <option value="PSE">PSE / Otros Bancos</option>
+    <div id="payment-modal" class="fixed inset-0 bg-black/95 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white text-slate-900 p-8 rounded-[40px] max-w-md w-full relative">
+            <h2 class="text-3xl font-black mb-2" id="modal-title">Check Out</h2>
+            <p class="text-sm text-slate-400 mb-8">Pago cifrado de extremo a extremo (AES-256).</p>
+            
+            <form id="pay-form" class="space-y-5">
+                <div>
+                    <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Región / Método</label>
+                    <select id="method-select" onchange="adjustInternationalInput()" class="w-full p-4 bg-slate-100 rounded-2xl border-none font-bold text-sm" required>
+                        <option value="card">Tarjeta de Crédito Internacional</option>
+                        <option value="paypal">PayPal Global</option>
+                        <optgroup label="Local (Colombia)">
+                            <option value="nequi">Nequi</option>
+                            <option value="bancolombia">Bancolombia</option>
+                        </optgroup>
                     </select>
                 </div>
-                <div class="mb-6">
-                    <label class="block text-gray-700 font-semibold mb-2 text-left">Número de cuenta o celular:</label>
-                    <input type="text" id="account-number" placeholder="Ej: 310 123 4567" class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-gold-500 text-gray-700" required>
-                </div>
-                <button type="submit" class="w-full bg-gold-500 text-slate-900 font-bold py-3 rounded hover:bg-gold-400 transition shadow-md">Confirmar y Activar</button>
-            </form>
-            <button onclick="closePayment()" class="mt-4 text-gray-400 hover:text-gray-600 w-full text-center text-sm transition">Cancelar y volver</button>
-        </div>
-    </div>
 
-    <div id="reader" class="fixed inset-0 bg-black/95 flex items-center justify-center hidden z-50 p-4">
-        <div class="reader-container relative overflow-hidden">
-            <div class="watermark">PROPIEDAD DE LECTUVERSO</div>
-            <div id="book-content" class="reader-text text-slate-200"></div>
-            <button onclick="closeReader()" class="mt-8 bg-gold-500 text-slate-900 px-6 py-2 rounded font-bold">Cerrar</button>
-        </div>
-    </div>
-
-    <script>
-        // Seguridad: Bloqueo básico
-        document.addEventListener('contextmenu', e => e.preventDefault());
-
-        // Modal de Pago
-        function openPayment(plan) {
-            document.getElementById('payment-modal').classList.remove('hidden');
-        }
-
-        function closePayment() {
-            document.getElementById('payment-modal').classList.add('hidden');
-        }
-
-        document.getElementById('payment-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const bank = document.getElementById('bank-select').value;
-            const account = document.getElementById('account-number').value;
-            
-            alert(`¡Solicitud recibida! Para completar el pago vía ${bank}, por favor envía el comprobante al soporte. Tu cuenta se activará en breve.`);
-            localStorage.setItem('subscription', 'basico');
-            closePayment();
-        });
-
-        // Lector
-        function closeReader() {
-            document.getElementById('reader').classList.add('hidden');
-        }
-    </script>
-</body>
-</html>
+                <div id="input-container">
+                    <label id="account-label" class="text-[10px] font-black uppercase
