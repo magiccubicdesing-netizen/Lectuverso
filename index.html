@@ -6,7 +6,6 @@
     <title>Lectuverso - Biblioteca Digital Protegida</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Paleta de colores personalizada */
         :root {
             --bg-dark: #0f172a;
             --bg-slate: #334155;
@@ -18,14 +17,12 @@
             color: var(--accent-white);
             font-family: 'Inter', sans-serif;
         }
-        /* Seguridad: Deshabilitar selección de texto */
         * {
             user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
         }
-        /* Watermark dinámico */
         .watermark {
             position: absolute;
             top: 50%;
@@ -37,7 +34,6 @@
             z-index: 10;
             font-weight: bold;
         }
-        /* Interfaz de lectura */
         .reader-container {
             max-width: 800px;
             margin: 0 auto;
@@ -46,18 +42,12 @@
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        .reader-text {
-            line-height: 1.8;
-            font-size: 1.1rem;
-            position: relative;
-        }
-        /* Color dorado personalizado para Tailwind */
         .text-gold-400 { color: #fbbf24; }
         .bg-gold-500 { background-color: #fbbf24; }
-        .hover\:bg-gold-400:hover { background-color: #fcd34d; }
     </style>
 </head>
 <body class="min-h-screen">
+
     <header class="bg-slate-900 py-4 shadow-md">
         <div class="container mx-auto px-4 flex justify-between items-center">
             <h1 class="text-2xl font-bold text-gold-400">Lectuverso</h1>
@@ -71,209 +61,83 @@
         </div>
     </header>
 
-    <section id="hero" class="py-20 bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-700">
-        <div class="container mx-auto px-4 text-center">
-            <h2 class="text-5xl font-bold mb-4 text-gold-400">Bienvenido a Lectuverso</h2>
-            <p class="text-xl mb-8 text-slate-300">La biblioteca digital premium donde la lectura es una experiencia protegida y exclusiva.</p>
-            <a href="#catalog" class="bg-gold-500 text-slate-900 px-8 py-3 rounded-lg font-bold hover:bg-gold-400 transition transform hover:scale-105 inline-block">Explorar Catálogo</a>
-        </div>
-    </section>
-
-    <section id="catalog" class="py-16">
+    <section id="hero" class="py-20 bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-700 text-center">
         <div class="container mx-auto px-4">
-            <h3 class="text-3xl font-bold text-center mb-12 text-gold-400">Catálogo de Libros</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="bg-slate-800 p-6 rounded-lg shadow-lg border border-slate-700">
-                    <h4 class="text-xl font-semibold mb-4 text-gold-400 border-b border-gold-400/20 pb-2">Amor</h4>
-                    <ul class="space-y-2">
-                        <li><button onclick="openReader('amor1')" class="text-slate-300 hover:text-gold-400 transition w-full text-left">Libro 1: Amor Eterno</button></li>
-                        <li><button onclick="openReader('amor2')" class="text-slate-300 hover:text-gold-400 transition w-full text-left">Libro 2: Pasiones Ocultas</button></li>
-                    </ul>
-                </div>
-                <div class="bg-slate-800 p-6 rounded-lg shadow-lg border border-slate-700">
-                    <h4 class="text-xl font-semibold mb-4 text-gold-400 border-b border-gold-400/20 pb-2">Terror</h4>
-                    <ul class="space-y-2">
-                        <li><button onclick="openReader('terror1')" class="text-slate-300 hover:text-gold-400 transition w-full text-left">Libro 1: Sombras Nocturnas</button></li>
-                        <li><button onclick="openReader('terror2')" class="text-slate-300 hover:text-gold-400 transition w-full text-left">Libro 2: El Susurro</button></li>
-                    </ul>
-                </div>
-                <div class="bg-slate-800 p-6 rounded-lg shadow-lg border border-slate-700">
-                    <h4 class="text-xl font-semibold mb-4 text-gold-400 border-b border-gold-400/20 pb-2">Superación</h4>
-                    <ul class="space-y-2">
-                        <li><button onclick="openReader('superacion1')" class="text-slate-300 hover:text-gold-400 transition w-full text-left">Libro 1: Venciendo Obstáculos</button></li>
-                        <li><button onclick="openReader('superacion2')" class="text-slate-300 hover:text-gold-400 transition w-full text-left">Libro 2: El Poder Interior</button></li>
-                    </ul>
-                </div>
-                <div class="bg-slate-800 p-6 rounded-lg shadow-lg border border-slate-700">
-                    <h4 class="text-xl font-semibold mb-4 text-gold-400 border-b border-gold-400/20 pb-2">Clásicos</h4>
-                    <ul class="space-y-2">
-                        <li><button onclick="openReader('clasico1')" class="text-slate-300 hover:text-gold-400 transition w-full text-left">Libro 1: Orgullo y Prejuicio</button></li>
-                        <li><button onclick="openReader('clasico2')" class="text-slate-300 hover:text-gold-400 transition w-full text-left">Libro 2: Cien Años de Soledad</button></li>
-                    </ul>
-                </div>
-            </div>
+            <h2 class="text-5xl font-bold mb-4 text-gold-400">Bienvenido a Lectuverso</h2>
+            <p class="text-xl mb-8 text-slate-300">Lectura protegida y exclusiva.</p>
+            <a href="#catalog" class="bg-gold-500 text-slate-900 px-8 py-3 rounded-lg font-bold hover:bg-gold-400 transition">Explorar Catálogo</a>
         </div>
     </section>
 
     <section id="plans" class="py-16 bg-slate-900/50">
         <div class="container mx-auto px-4 text-center">
             <h3 class="text-3xl font-bold mb-8 text-gold-400">Planes de Suscripción</h3>
-            <p class="mb-12 text-slate-400">Pagos seguros vía Nequi, Daviplata, PSE y tarjetas de crédito.</p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-slate-800 p-8 rounded-xl border border-slate-700 hover:border-gold-500/50 transition">
+                <div class="bg-slate-800 p-8 rounded-xl border border-slate-700">
                     <h4 class="text-2xl font-bold mb-4 text-gold-400">Básico</h4>
                     <p class="text-3xl font-bold mb-6">$15.000 <span class="text-sm font-normal text-slate-400">/mes</span></p>
-                    <ul class="text-left text-slate-300 mb-8 space-y-2 text-sm">
-                        <li>✓ 10 libros seleccionados</li>
-                        <li>✓ Lectura protegida</li>
-                        <li>✓ Soporte básico</li>
-                    </ul>
-                    <button onclick="openPayment('basico')" class="w-full bg-gold-500 text-slate-900 font-bold py-2 rounded mb-2 hover:bg-gold-400">Pagar ahora</button>
+                    <button onclick="openPayment('basico')" class="w-full bg-gold-500 text-slate-900 font-bold py-2 rounded hover:bg-gold-400 transition">Pagar ahora</button>
                 </div>
-                <div class="bg-slate-800 p-8 rounded-xl border-2 border-gold-500 transform scale-105 shadow-2xl">
-                    <h4 class="text-2xl font-bold mb-4 text-gold-400">Premium</h4>
-                    <p class="text-3xl font-bold mb-6">$25.000 <span class="text-sm font-normal text-slate-400">/mes</span></p>
-                    <ul class="text-left text-slate-300 mb-8 space-y-2 text-sm">
-                        <li>✓ Acceso Ilimitado</li>
-                        <li>✓ Estrenos exclusivos</li>
-                        <li>✓ Sin anuncios</li>
-                    </ul>
-                    <button onclick="alert('Plan Premium no implementado aún.')" class="w-full bg-gold-500 text-slate-900 font-bold py-2 rounded mb-2 hover:bg-gold-400">Pagar ahora</button>
                 </div>
-                <div class="bg-slate-800 p-8 rounded-xl border border-slate-700 hover:border-gold-500/50 transition">
-                    <h4 class="text-2xl font-bold mb-4 text-gold-400">Anual</h4>
-                    <p class="text-3xl font-bold mb-6">$220.000 <span class="text-sm font-normal text-slate-400">/año</span></p>
-                    <ul class="text-left text-slate-300 mb-8 space-y-2 text-sm">
-                        <li>✓ Todo el plan Premium</li>
-                        <li>✓ Ahorra 2 meses</li>
-                        <li>✓ Regalo sorpresa</li>
-                    </ul>
-                    <button onclick="alert('Plan Anual no implementado aún.')" class="w-full bg-gold-500 text-slate-900 font-bold py-2 rounded mb-2 hover:bg-gold-400">Pagar ahora</button>
-                </div>
-            </div>
         </div>
     </section>
 
-    <!-- Modal de Pago con Fondo Blanco -->
-    <div id="payment-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-50 p-4">
-        <div class="bg-white p-8 rounded-xl max-w-md w-full shadow-lg">
-            <h2 class="text-2xl font-bold mb-6 text-gray-800 text-center">Pago Seguro - Plan Básico</h2>
+    <div id="payment-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-white p-8 rounded-xl max-w-md w-full shadow-2xl">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800 text-center border-b pb-4">Pago Seguro - Lectuverso</h2>
             <form id="payment-form">
-                <div class="mb-6">
-                    <h3 class="text-lg font-semibold mb-4 text-gray-700">Opción 1: Medio de Pago</h3>
-                    <div class="space-y-4">
-                        <label class="block">
-                            <span class="text-gray-600">Sub-opción 1: Bancolombia</span>
-                            <input type="text" id="account-number" placeholder="Número de Cuenta (ej. 123-456789-0)" class="w-full mt-2 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gold-500" required>
-                        </label>
-                    </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-semibold mb-2 text-left">Selecciona tu método de pago:</label>
+                    <select id="bank-select" class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-gold-500 text-gray-700" required>
+                        <option value="">-- Elegir banco o billetera --</option>
+                        <option value="Nequi">Nequi</option>
+                        <option value="Daviplata">Daviplata</option>
+                        <option value="Bancolombia">Bancolombia (Ahorros)</option>
+                        <option value="PSE">PSE / Otros Bancos</option>
+                    </select>
                 </div>
-                <button type="submit" class="w-full bg-gold-500 text-white font-bold py-2 rounded hover:bg-gold-400">Confirmar Pago</button>
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-semibold mb-2 text-left">Número de cuenta o celular:</label>
+                    <input type="text" id="account-number" placeholder="Ej: 310 123 4567" class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-gold-500 text-gray-700" required>
+                </div>
+                <button type="submit" class="w-full bg-gold-500 text-slate-900 font-bold py-3 rounded hover:bg-gold-400 transition shadow-md">Confirmar y Activar</button>
             </form>
-            <button onclick="closePayment()" class="mt-4 text-gray-500 hover:text-gray-700 w-full text-center">Cancelar</button>
+            <button onclick="closePayment()" class="mt-4 text-gray-400 hover:text-gray-600 w-full text-center text-sm transition">Cancelar y volver</button>
         </div>
     </div>
 
     <div id="reader" class="fixed inset-0 bg-black/95 flex items-center justify-center hidden z-50 p-4">
         <div class="reader-container relative overflow-hidden">
-            <div class="watermark">PROPIEDAD DE LECTUVERSO - Usuario: Member_ID_882</div>
-            <div id="book-content" class="reader-text text-slate-200">
-            </div>
-            <div class="mt-8 flex justify-end">
-                <button onclick="closeReader()" class="bg-gold-500 text-slate-900 px-6 py-2 rounded font-bold hover:bg-gold-400">Finalizar Lectura</button>
-            </div>
+            <div class="watermark">PROPIEDAD DE LECTUVERSO</div>
+            <div id="book-content" class="reader-text text-slate-200"></div>
+            <button onclick="closeReader()" class="mt-8 bg-gold-500 text-slate-900 px-6 py-2 rounded font-bold">Cerrar</button>
         </div>
     </div>
 
-    <footer class="bg-slate-950 py-12 border-t border-slate-800">
-        <div class="container mx-auto px-4 text-center">
-            <h4 class="text-xl font-semibold mb-6 text-gold-400">Términos de Seguridad</h4>
-            <div class="max-w-3xl mx-auto text-slate-400 text-sm space-y-3 mb-8">
-                <p>• Cuentas personales: El acceso simultáneo desde diferentes IPs causará bloqueo automático.</p>
-                <p>• Protección de Autor: Prohibida la descarga o copia parcial de los textos.</p>
-                <p>• Monitoreo Antifraude: Contamos con marcas de agua invisibles vinculadas a su perfil.</p>
-            </div>
-            <p class="text-slate-600 text-xs">&copy; 2026 Lectuverso. Sistema de Protección de Contenidos Activo.</p>
-        </div>
-    </footer>
-
     <script>
-        // SEGURIDAD: Deshabilitar clic derecho
+        // Seguridad: Bloqueo básico
         document.addEventListener('contextmenu', e => e.preventDefault());
 
-        // SEGURIDAD: Bloquear combinaciones de copia y captura
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && ['c', 'v', 's', 'p', 'u', 'a'].includes(e.key.toLowerCase())) {
-                e.preventDefault();
-                alert('Protección de derechos de autor activa.');
-            }
-            if (e.key === 'F12' || e.key === 'PrintScreen') {
-                e.preventDefault();
-                alert('Acción restringida.');
-            }
-        });
-
-        // SEGURIDAD: Anti-espionaje al cambiar de ventana
-        document.addEventListener('visibilitychange', function() {
-            if (document.hidden) {
-                document.getElementById('reader').classList.add('hidden');
-            }
-        });
-
-        // FUNCIONALIDAD: Abrir Modal de Pago
+        // Modal de Pago
         function openPayment(plan) {
-            if (plan === 'basico') {
-                document.getElementById('payment-modal').classList.remove('hidden');
-            }
+            document.getElementById('payment-modal').classList.remove('hidden');
         }
 
-        // FUNCIONALIDAD: Cerrar Modal de Pago
         function closePayment() {
             document.getElementById('payment-modal').classList.add('hidden');
         }
 
-        // FUNCIONALIDAD: Procesar Pago y Activar Suscripción
         document.getElementById('payment-form').addEventListener('submit', function(e) {
             e.preventDefault();
-            const accountNumber = document.getElementById('account-number').value.trim();
-            if (!accountNumber) {
-                alert('Por favor, ingresa un número de cuenta válido.');
-                return;
-            }
-            // Simulación de pago exitoso
-            alert('Pago procesado exitosamente vía Bancolombia. Suscripción Básica activada.');
-            localStorage.setItem('subscription', 'basico'); // Activar suscripción
+            const bank = document.getElementById('bank-select').value;
+            const account = document.getElementById('account-number').value;
+            
+            alert(`¡Solicitud recibida! Para completar el pago vía ${bank}, por favor envía el comprobante al soporte. Tu cuenta se activará en breve.`);
+            localStorage.setItem('subscription', 'basico');
             closePayment();
         });
 
-        // FUNCIONALIDAD: Lector con Control de Suscripción
-        const selectedBooks = ['amor1', 'terror1', 'superacion1', 'clasico1', 'amor3', 'terror3', 'superacion3', 'clasico3', 'amor4', 'terror4']; // 10 libros seleccionados para Básico
-        const library = {
-            amor1: "Capítulo 1: El encuentro bajo la lluvia. El destino parecía empeñado en unirlos en aquel café de la Séptima...",
-            amor2: "Había secretos que quemaban más que el sol de mediodía, y ella guardaba el más peligroso de todos...",
-            terror1: "El crujido de la madera no provenía del viento. Algo subía las escaleras con una lentitud aterradora...",
-            terror2: "Nadie en el pueblo hablaba de lo que vivía en el pozo, pero todos dejaban una vela encendida al anochecer...",
-            superacion1: "La montaña no se movió, pero mi determinación sí. Aprendí que el primer paso es siempre el más pesado...",
-            superacion2: "El silencio es tu mejor maestro. En la quietud de la mañana, encontré la voz que había perdido...",
-            clasico1: "Es una verdad mundialmente reconocida que un hombre soltero, poseedor de una gran fortuna...",
-            clasico2: "Muchos años después, frente al pelotón de fusilamiento, el coronel Aureliano Buendía había de recordar aquella tarde remota en que su padre lo llevó a conocer el hielo..."
-        };
-
-        function openReader(bookId) {
-            const sub = localStorage.getItem('subscription');
-            if (sub === 'basico' && !selectedBooks.includes(bookId)) {
-                alert('Este libro requiere Plan Premium.');
-                return;
-            }
-            if (!sub) {
-                alert('Debes adquirir un plan para leer.');
-                window.location.href = '#plans';
-                return;
-            }
-            document.getElementById('book-content').innerText = library[bookId] || "Contenido no disponible.";
-            document.getElementById('reader').classList.remove('hidden');
-        }
-
+        // Lector
         function closeReader() {
             document.getElementById('reader').classList.add('hidden');
         }
