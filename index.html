@@ -105,7 +105,7 @@
 
     <div id="payment-modal" class="fixed inset-0 bg-black/98 hidden z-[60] flex items-center justify-center p-4">
         <div class="bg-white text-slate-900 p-8 rounded-[40px] max-w-md w-full relative">
-            <h2 class="text-2xl font-black mb-6" id="payment-title text-center">Finalizar Suscripción</h2>
+            <h2 class="text-2xl font-black mb-6 text-center">Finalizar Suscripción</h2>
             <form id="pay-form" class="space-y-4">
                 <select id="method-select" class="w-full p-4 bg-slate-100 rounded-2xl font-bold border-none" required>
                     <option value="nequi">Nequi</option>
@@ -164,7 +164,6 @@
 
         function openPayment(plan) {
             currentSuscripcion = plan;
-            document.getElementById('payment-title').innerText = `Pagar Plan ${plan}`;
             document.getElementById('payment-modal').classList.remove('hidden');
         }
 
@@ -205,5 +204,3 @@
     </script>
 </body>
 </html>
-
-
