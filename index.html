@@ -38,20 +38,33 @@
     <section id="catalog-section" class="hidden py-20 px-6 min-h-screen bg-slate-50 text-slate-900">
         <div class="max-w-6xl mx-auto">
             <h2 class="text-4xl font-black mb-10 italic text-center">Nuestra <span class="text-yellow-500">Colección</span></h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white p-6 rounded-3xl shadow-xl border border-slate-200 text-center">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-white p-6 rounded-3xl shadow-xl border border-yellow-500/30 text-center ring-2 ring-yellow-500/10">
+                    <div class="bg-slate-900 w-full h-64 mb-4 rounded-lg flex flex-col items-center justify-center text-yellow-500 p-4 shadow-inner">
+                        <span class="text-xs uppercase tracking-widest mb-2 text-slate-400">Tomo I</span>
+                        <h4 class="font-black text-xl leading-tight">¿DE QUÉ ESTAMOS HABLANDO?</h4>
+                        <span class="mt-4 text-[10px] text-slate-500">POR LECTUVERSO</span>
+                    </div>
+                    <h3 class="font-bold text-xl">TDA vs TDAH</h3>
+                    <p class="text-slate-500 text-sm mb-4">Salud y Bienestar</p>
+                    <button onclick="openReader('tdatdah1')" class="w-full bg-yellow-500 text-black py-2 rounded-xl font-bold hover:bg-yellow-600 transition">Leer Ahora</button>
+                </div>
+
+                <div class="bg-white p-6 rounded-3xl shadow-xl border border-slate-200 text-center opacity-70">
                     <div class="bg-slate-200 w-full h-64 mb-4 rounded-lg flex items-center justify-center text-slate-400 italic">Portada Libro</div>
                     <h3 class="font-bold text-xl">Amor Eterno</h3>
                     <p class="text-slate-500 text-sm mb-4">Romance Contemporáneo</p>
                     <button onclick="openReader('amor1')" class="w-full bg-slate-900 text-white py-2 rounded-xl font-bold hover:bg-black transition">Leer Ahora</button>
                 </div>
-                <div class="bg-white p-6 rounded-3xl shadow-xl border border-slate-200 text-center">
+
+                <div class="bg-white p-6 rounded-3xl shadow-xl border border-slate-200 text-center opacity-70">
                     <div class="bg-slate-200 w-full h-64 mb-4 rounded-lg flex items-center justify-center text-slate-400 italic">Portada Libro</div>
                     <h3 class="font-bold text-xl">Sombras Nocturnas</h3>
                     <p class="text-slate-500 text-sm mb-4">Terror / Suspenso</p>
                     <button onclick="openReader('terror1')" class="w-full bg-slate-900 text-white py-2 rounded-xl font-bold hover:bg-black transition">Leer Ahora</button>
                 </div>
-                <div class="bg-white p-6 rounded-3xl shadow-xl border border-slate-200 text-center">
+
+                <div class="bg-white p-6 rounded-3xl shadow-xl border border-slate-200 text-center opacity-70">
                     <div class="bg-slate-200 w-full h-64 mb-4 rounded-lg flex items-center justify-center text-slate-400 italic">Portada Libro</div>
                     <h3 class="font-bold text-xl">Venciendo Obstáculos</h3>
                     <p class="text-slate-500 text-sm mb-4">Superación Personal</p>
@@ -67,7 +80,6 @@
                 <h2 class="text-4xl font-black text-white">Planes de <span class="text-yellow-500">Membresía</span></h2>
                 <button onclick="closePlans()" class="text-white bg-white/10 p-3 rounded-full hover:bg-red-500 transition">✕</button>
             </div>
-            
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div class="glass p-8 rounded-[40px] border-b-8 border-slate-600 flex flex-col text-white">
                     <h3 class="text-2xl font-bold mb-4">Básico</h3>
@@ -124,7 +136,7 @@
     <div id="reader-modal" class="fixed inset-0 bg-[#0f172a] hidden z-[60] flex flex-col p-6">
         <div class="max-w-3xl mx-auto w-full flex-grow overflow-y-auto py-10">
             <h2 id="reader-book-title" class="text-3xl font-bold text-yellow-500 mb-6 border-b border-white/10 pb-4"></h2>
-            <div id="reader-content" class="text-lg leading-relaxed text-slate-200 space-y-4"></div>
+            <div id="reader-content" class="text-lg leading-relaxed text-slate-200 space-y-6"></div>
         </div>
         <div class="max-w-3xl mx-auto w-full py-6 flex justify-between border-t border-white/10">
             <button onclick="prevChapter()" class="text-slate-400 hover:text-white transition">← Anterior</button>
@@ -140,6 +152,16 @@
         let currentChapter = 0;
 
         const bibliotecaData = {
+            // INTEGRACIÓN DEL E-BOOK PDF "TOMO I"
+            tdatdah1: { 
+                titulo: "TDA vs TDAH: ¿De qué estamos hablando?", 
+                capitulos: [
+                    "INTRODUCCIÓN: No soy médico, no soy psicólogo, no soy neurólogo. Soy una persona curiosa -como vos- que alguna vez se preguntó por qué era tan difícil concentrarse, por qué cuesta tanto terminar una tarea fácil, o por qué alguien a quien queremos mucho no puede dejar de moverse o soñar despierto. Este libro es un viaje para entender que no se trata de una moda ni de una excusa, sino de algo real que muchas personas viven.",
+                    "CAPÍTULO 1: EL MOTOR QUE NO SE APAGA. ¿Qué significa vivir con TDAH? Imagina que tu mente es un motor que nunca se apaga, ni siquiera de noche. No es solo falta de atención, es una forma distinta de procesar el mundo. No estoy aquí para darte un diagnóstico médico, sino para que charlemos sobre cómo se siente y cómo podemos acompañar a quienes lo viven.",
+                    "CAPÍTULO 2: MITOS Y REALIDADES. A menudo escuchamos que el TDA es 'falta de límites' o 'pereza'. Nada más lejos de la realidad. A través de este tomo exploraremos las bases biológicas y la diferencia fundamental entre el déficit de atención puro (TDA) y aquel que viene acompañado de hiperactividad e impulsividad (TDAH).",
+                    "CONCLUSIÓN DEL TOMO I: Entender es el primer paso para acompañar. En las próximas páginas profundizaremos en herramientas prácticas para la vida cotidiana. Gracias por animarte a mirar distinto."
+                ] 
+            },
             amor1: { titulo: "Amor Eterno", capitulos: ["Contenido del Capítulo 1: El encuentro bajo la lluvia...", "Contenido del Capítulo 2: Secretos revelados..."] },
             terror1: { titulo: "Sombras Nocturnas", capitulos: ["Contenido del Capítulo 1: El susurro en la oscuridad...", "Contenido del Capítulo 2: No abras la puerta..."] },
             superacion1: { titulo: "Venciendo Obstáculos", capitulos: ["Contenido del Capítulo 1: La montaña más alta...", "Contenido del Capítulo 2: Fuerza interior..."] }
@@ -193,13 +215,31 @@
 
         function updateReader() {
             const book = bibliotecaData[readingBook];
+            const contentDiv = document.getElementById('reader-content');
+            
             document.getElementById('reader-book-title').innerText = book.titulo;
-            document.getElementById('reader-content').innerText = book.capitulos[currentChapter];
+            
+            // Limpiamos y formateamos el contenido con párrafos
+            contentDiv.innerHTML = '';
+            const p = document.createElement('p');
+            p.innerText = book.capitulos[currentChapter];
+            contentDiv.appendChild(p);
+            
             document.getElementById('chapter-label').innerText = `Capítulo ${currentChapter + 1}`;
         }
 
         function closeReader() { document.getElementById('reader-modal').classList.add('hidden'); }
-        function nextChapter() { if(currentChapter < 1) { currentChapter++; updateReader(); } else { alert("Suscríbete al plan Premium para capítulos ilimitados."); } }
+        
+        function nextChapter() { 
+            const book = bibliotecaData[readingBook];
+            if(currentChapter < book.capitulos.length - 1) { 
+                currentChapter++; 
+                updateReader(); 
+            } else { 
+                alert("Has llegado al final de los capítulos disponibles en este tomo."); 
+            } 
+        }
+        
         function prevChapter() { if(currentChapter > 0) { currentChapter--; updateReader(); } }
     </script>
 </body>
