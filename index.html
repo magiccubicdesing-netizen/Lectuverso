@@ -9,10 +9,8 @@
         :root { --gold: #fbbf24; --slate: #1e293b; }
         body { background: #0f172a; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s ease; }
-        .glass:hover { border-color: rgba(251, 191, 36, 0.4); transform: translateY(-5px); }
         @media print { body { display: none; } }
         .no-select { user-select: none; -webkit-user-select: none; }
-        .modal-overlay { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px); }
     </style>
 </head>
 <body class="no-select">
@@ -22,16 +20,13 @@
         <div class="space-x-6 text-sm font-medium">
             <a href="#" onclick="showSection('hero')" class="hover:text-yellow-500 transition">Inicio</a>
             <a href="#" onclick="showSection('catalog')" class="hover:text-yellow-500 transition">Catálogo</a>
-            <a href="#" onclick="openPlans()" class="hover:text-yellow-500 transition font-bold text-yellow-500">Suscripciones</a>
         </div>
     </nav>
 
     <section id="hero-section" class="py-20 px-6 text-center">
         <h2 class="text-6xl font-extrabold mb-6">Tu Puerta a la <span class="text-yellow-500">Sabiduría.</span></h2>
-        <p class="text-slate-400 max-w-2xl mx-auto mb-10 text-lg">Acceso exclusivo bajo los estándares de seguridad más altos.</p>
         <div class="flex justify-center gap-4">
-            <button onclick="showSection('catalog')" class="bg-yellow-500 text-black px-10 py-4 rounded-full font-bold shadow-lg shadow-yellow-500/20 hover:scale-105 transition">Explorar Catálogo</button>
-            <button onclick="openPlans()" class="bg-white/10 text-white px-10 py-4 rounded-full font-bold hover:bg-white/20 transition">Ver Planes</button>
+            <button onclick="showSection('catalog')" class="bg-yellow-500 text-black px-10 py-4 rounded-full font-bold shadow-lg hover:scale-105 transition">Explorar Catálogo</button>
         </div>
     </section>
 
@@ -40,66 +35,25 @@
             <h2 class="text-4xl font-black mb-10 italic text-center">Nuestra <span class="text-yellow-500">Colección</span></h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 
-                <div class="bg-white p-6 rounded-3xl shadow-xl border-2 border-yellow-500 text-center">
+                <div class="bg-white p-6 rounded-3xl shadow-xl border-4 border-yellow-500 text-center">
                     <div class="bg-slate-900 w-full h-64 mb-4 rounded-lg flex flex-col items-center justify-center text-yellow-500 p-4">
-                        <span class="text-xs uppercase tracking-widest mb-2 text-yellow-500/60">Contenido Gratuito</span>
-                        <h4 class="font-black text-xl leading-tight text-center">¿DE QUÉ ESTAMOS HABLANDO?</h4>
-                        <p class="text-[10px] mt-2 text-slate-400">LECTUVERSO FREE</p>
+                        <span class="text-xs font-bold uppercase tracking-widest mb-2 text-yellow-500">ACCESO LIBRE</span>
+                        <h4 class="font-black text-xl leading-tight">TDA vs TDAH</h4>
+                        <p class="text-[10px] mt-2 text-slate-400 italic">LECTURA ABIERTA</p>
                     </div>
-                    <h3 class="font-bold text-xl">TDA vs TDAH</h3>
+                    <h3 class="font-bold text-xl">¿De qué hablamos?</h3>
                     <p class="text-slate-500 text-sm mb-4">Salud y Bienestar</p>
-                    <button onclick="openReader('tdatdah1')" class="w-full bg-yellow-500 text-black py-2 rounded-xl font-bold hover:bg-yellow-600 transition shadow-lg">Leer Gratis Ahora</button>
+                    <button onclick="openFreeReader()" class="w-full bg-yellow-500 text-black py-3 rounded-xl font-black hover:bg-yellow-600 transition">LEER GRATIS AHORA</button>
                 </div>
 
-                <div class="bg-white p-6 rounded-3xl shadow-xl border border-slate-200 text-center opacity-70">
-                    <div class="bg-slate-200 w-full h-64 mb-4 rounded-lg flex items-center justify-center text-slate-400 italic">Portada Libro</div>
+                <div class="bg-white p-6 rounded-3xl shadow-xl border border-slate-200 text-center opacity-50">
+                    <div class="bg-slate-200 w-full h-64 mb-4 rounded-lg flex items-center justify-center text-slate-400 italic font-bold">PREMIUM</div>
                     <h3 class="font-bold text-xl">Amor Eterno</h3>
-                    <p class="text-slate-500 text-sm mb-4">Romance</p>
-                    <button onclick="openReader('amor1')" class="w-full bg-slate-900 text-white py-2 rounded-xl font-bold hover:bg-black transition">Leer Ahora</button>
-                </div>
-
-                <div class="bg-white p-6 rounded-3xl shadow-xl border border-slate-200 text-center opacity-70">
-                    <div class="bg-slate-200 w-full h-64 mb-4 rounded-lg flex items-center justify-center text-slate-400 italic">Portada Libro</div>
-                    <h3 class="font-bold text-xl">Sombras Nocturnas</h3>
-                    <p class="text-slate-500 text-sm mb-4">Terror</p>
-                    <button onclick="openReader('terror1')" class="w-full bg-slate-900 text-white py-2 rounded-xl font-bold hover:bg-black transition">Leer Ahora</button>
-                </div>
-
-                <div class="bg-white p-6 rounded-3xl shadow-xl border border-slate-200 text-center opacity-70">
-                    <div class="bg-slate-200 w-full h-64 mb-4 rounded-lg flex items-center justify-center text-slate-400 italic">Portada Libro</div>
-                    <h3 class="font-bold text-xl">Venciendo Obstáculos</h3>
-                    <p class="text-slate-500 text-sm mb-4">Superación</p>
-                    <button onclick="openReader('superacion1')" class="w-full bg-slate-900 text-white py-2 rounded-xl font-bold hover:bg-black transition">Leer Ahora</button>
+                    <button class="w-full bg-slate-300 text-slate-500 py-2 rounded-xl font-bold cursor-not-allowed">Solo Suscriptores</button>
                 </div>
             </div>
         </div>
     </section>
-
-    <div id="plans-modal" class="fixed inset-0 z-50 hidden modal-overlay overflow-y-auto py-10 px-4">
-        <div class="max-w-6xl mx-auto">
-            <div class="flex justify-between items-center mb-12">
-                <h2 class="text-4xl font-black text-white">Planes de <span class="text-yellow-500">Membresía</span></h2>
-                <button onclick="closePlans()" class="text-white bg-white/10 p-3 rounded-full hover:bg-red-500 transition">✕</button>
-            </div>
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div class="glass p-8 rounded-[40px] border-b-8 border-slate-600 flex flex-col text-white">
-                    <h3 class="text-2xl font-bold mb-4">Básico</h3>
-                    <p class="text-4xl font-black mb-6">$15.000 <span class="text-xs text-slate-400">/mes</span></p>
-                    <button onclick="openPayment('Básico')" class="w-full py-4 bg-white text-black rounded-2xl font-bold">Pagar ahora</button>
-                </div>
-                <div class="glass p-10 rounded-[40px] border-b-8 border-yellow-500 bg-white/5 ring-1 ring-yellow-500/50 scale-105 flex flex-col text-white">
-                    <h3 class="text-2xl font-bold mb-4 text-yellow-500">Premium</h3>
-                    <p class="text-4xl font-black mb-6">$25.000 <span class="text-xs text-slate-400">/mes</span></p>
-                    <button onclick="openPayment('Premium')" class="w-full py-4 bg-yellow-500 text-black rounded-2xl font-bold">Pagar ahora</button>
-                </div>
-                <div class="glass p-8 rounded-[40px] border-b-8 border-blue-600 flex flex-col text-white">
-                    <h3 class="text-2xl font-bold mb-4 text-blue-400">Anual</h3>
-                    <p class="text-4xl font-black mb-6">$220.000 <span class="text-xs text-slate-400">/año</span></p>
-                    <button onclick="openPayment('Anual')" class="w-full py-4 bg-blue-600 text-white rounded-2xl font-bold">Pagar ahora</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div id="reader-modal" class="fixed inset-0 bg-[#0f172a] hidden z-[60] flex flex-col p-6">
         <div class="max-w-3xl mx-auto w-full flex-grow overflow-y-auto py-10">
@@ -116,46 +70,23 @@
 
     <script>
         let currentChapter = 0;
-        let readingBook = null;
-
-        const bibliotecaData = {
-            tdatdah1: { 
-                titulo: "TDA vs TDAH: ¿De qué estamos hablando?", 
-                capitulos: [
-                    "INTRODUCCIÓN: No soy médico, no soy psicólogo, no soy neurólogo. Soy una persona curiosa -como vos- que alguna vez se preguntó por qué era tan difícil concentrarse, por qué cuesta tanto terminar una tarea fácil, o por qué alguien a quien quiero mucho no puede dejar de moverse o soñar despierto.",
-                    "CAPÍTULO 1: EL MOTOR QUE NO SE APAGA. Imagina que tu mente es un motor que nunca se apaga, ni siquiera de noche. No es solo falta de atención, es una forma distinta de procesar el mundo.",
-                    "CAPÍTULO 2: MITOS Y REALIDADES. A menudo escuchamos que el TDA es 'falta de límites' o 'pereza'. Nada más lejos de la realidad. Aquí exploraremos las bases biológicas y las diferencias reales."
-                ] 
-            },
-            amor1: { titulo: "Amor Eterno", capitulos: ["Contenido bloqueado: Se requiere suscripción."] },
-            terror1: { titulo: "Sombras Nocturnas", capitulos: ["Contenido bloqueado: Se requiere suscripción."] },
-            superacion1: { titulo: "Venciendo Obstáculos", capitulos: ["Contenido bloqueado: Se requiere suscripción."] }
+        const libroFree = {
+            titulo: "TDA vs TDAH: ¿De qué estamos hablando?",
+            capitulos: [
+                "INTRODUCCIÓN: No soy médico, no soy psicólogo, no soy neurólogo. Soy una persona curiosa -como vos- que alguna vez se preguntó por qué era tan difícil concentrarse...",
+                "CAPÍTULO 1: EL MOTOR QUE NO SE APAGA. Imagina que tu mente es un motor que nunca se apaga, ni siquiera de noche. No es solo falta de atención, es una forma distinta de procesar el mundo.",
+                "CAPÍTULO 2: MITOS Y REALIDADES. A menudo escuchamos que el TDA es 'falta de límites' o 'pereza'. Nada más lejos de la realidad. Aquí exploraremos las bases biológicas.",
+                "PÁGINA FINAL: Este es el final de la muestra gratuita del Tomo I."
+            ]
         };
 
         function showSection(id) {
             document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
-            const target = document.getElementById(id + '-section');
-            if(target) target.classList.remove('hidden');
+            document.getElementById(id + '-section').classList.remove('hidden');
         }
 
-        function openPlans() { document.getElementById('plans-modal').classList.remove('hidden'); }
-        function closePlans() { document.getElementById('plans-modal').classList.add('hidden'); }
-
-        // --- OPTIMIZACIÓN FINAL ---
-        function openReader(bookId) {
-            // SI EL ID ES EL DEL LIBRO GRATUITO, SALTAMOS TODA VERIFICACIÓN
-            if (bookId === 'tdatdah1') {
-                console.log("Acceso gratuito concedido para TDA vs TDAH");
-            } else {
-                // PARA CUALQUIER OTRO LIBRO, PEDIMOS PLAN
-                if (!localStorage.getItem('plan')) {
-                    alert("Este libro es parte de nuestra colección Premium. Suscríbete para leerlo.");
-                    openPlans();
-                    return;
-                }
-            }
-            
-            readingBook = bookId;
+        // FUNCIÓN CLAVE: Abre directamente sin mirar LocalStorage ni Planes
+        function openFreeReader() {
             currentChapter = 0;
             updateReader();
             document.getElementById('reader-modal').classList.remove('hidden');
@@ -163,9 +94,8 @@
         }
 
         function updateReader() {
-            const book = bibliotecaData[readingBook];
-            document.getElementById('reader-book-title').innerText = book.titulo;
-            document.getElementById('reader-content').innerHTML = `<p>${book.capitulos[currentChapter]}</p>`;
+            document.getElementById('reader-book-title').innerText = libroFree.titulo;
+            document.getElementById('reader-content').innerHTML = `<p>${libroFree.capitulos[currentChapter]}</p>`;
             document.getElementById('chapter-label').innerText = `Capítulo ${currentChapter + 1}`;
         }
 
@@ -175,21 +105,21 @@
         }
 
         function nextChapter() { 
-            const book = bibliotecaData[readingBook];
-            if(currentChapter < book.capitulos.length - 1) { 
+            if(currentChapter < libroFree.capitulos.length - 1) { 
                 currentChapter++; 
                 updateReader(); 
             } 
         }
 
-        function prevChapter() { if(currentChapter > 0) { currentChapter--; updateReader(); } }
-        
-        // Simulación de pago para probar los otros libros
-        function openPayment(plan) {
-            localStorage.setItem('plan', plan);
-            alert("Suscripción " + plan + " activada para pruebas.");
-            closePlans();
+        function prevChapter() { 
+            if(currentChapter > 0) { 
+                currentChapter--; 
+                updateReader(); 
+            } 
         }
+
+        // Limpieza automática de cualquier bloqueo anterior al cargar la página
+        window.onload = () => { localStorage.removeItem('plan'); };
     </script>
 </body>
 </html>
