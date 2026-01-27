@@ -5,12 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lectuverso | Biblioteca Premium</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600&family=Inter:wght@400;900&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #fbbf24; --slate: #1e293b; }
         body { background: #0f172a; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s ease; }
-        @media print { body { display: none; } }
         .no-select { user-select: none; -webkit-user-select: none; }
+        
+        /* Estilo tipo Libro PDF */
+        .book-page {
+            font-family: 'Crimson Pro', serif;
+            background: #fdfdfd;
+            color: #1a1a1a;
+            padding: 3rem 2.5rem;
+            border-radius: 4px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            min-height: 70vh;
+            line-height: 1.6;
+        }
+        .book-content p { margin-bottom: 1.5rem; font-size: 1.25rem; }
+        .book-content .highlight { color: #854d0e; font-weight: 600; font-size: 1.4rem; border-left: 4px solid #fbbf24; padding-left: 1rem; margin: 2rem 0; }
+        .page-number { font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #94a3b8; text-align: center; margin-top: 2rem; text-transform: uppercase; letter-spacing: 0.1em; }
     </style>
 </head>
 <body class="no-select">
@@ -25,58 +39,97 @@
 
     <section id="hero-section" class="py-20 px-6 text-center">
         <h2 class="text-6xl font-extrabold mb-6">Tu Puerta a la <span class="text-yellow-500">Sabiduría.</span></h2>
-        <div class="flex justify-center gap-4">
-            <button onclick="showSection('catalog')" class="bg-yellow-500 text-black px-10 py-4 rounded-full font-bold shadow-lg hover:scale-105 transition">Explorar Catálogo</button>
-        </div>
+        <button onclick="showSection('catalog')" class="bg-yellow-500 text-black px-10 py-4 rounded-full font-bold shadow-lg hover:scale-105 transition">Explorar Catálogo</button>
     </section>
 
-    <section id="catalog-section" class="hidden py-20 px-6 min-h-screen bg-slate-50 text-slate-900">
+    <section id="catalog-section" class="hidden py-20 px-6 min-h-screen bg-slate-900 text-white">
         <div class="max-w-6xl mx-auto">
-            <h2 class="text-4xl font-black mb-10 italic text-center">Nuestra <span class="text-yellow-500">Colección</span></h2>
+            <h2 class="text-4xl font-black mb-12 text-center text-yellow-500">Nuestra Colección</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 
-                <div class="bg-white p-6 rounded-3xl shadow-xl border-4 border-yellow-500 text-center">
-                    <div class="bg-slate-900 w-full h-64 mb-4 rounded-lg flex flex-col items-center justify-center text-yellow-500 p-4">
-                        <span class="text-xs font-bold uppercase tracking-widest mb-2 text-yellow-500">ACCESO LIBRE</span>
-                        <h4 class="font-black text-xl leading-tight">TDA vs TDAH</h4>
-                        <p class="text-[10px] mt-2 text-slate-400 italic">LECTURA ABIERTA</p>
+                <div class="bg-slate-800 p-6 rounded-3xl shadow-xl border-2 border-yellow-500 text-center flex flex-col justify-between">
+                    <div>
+                        <div class="bg-yellow-500 w-full h-64 mb-4 rounded-lg flex flex-col items-center justify-center text-black p-4 shadow-inner">
+                            <span class="text-xs font-bold uppercase tracking-tighter mb-2 opacity-60">Tomo I</span>
+                            <h4 class="font-black text-2xl leading-tight">TDA vs TDAH</h4>
+                            <p class="text-[10px] mt-4 font-bold border-t border-black/20 pt-2 uppercase">Lectura Gratuita</p>
+                        </div>
+                        <h3 class="font-bold text-xl mb-1">¿De qué hablamos?</h3>
+                        <p class="text-slate-400 text-sm mb-6 italic text-center">"Conocer para nombrar lo que nos pasa"</p>
                     </div>
-                    <h3 class="font-bold text-xl">¿De qué hablamos?</h3>
-                    <p class="text-slate-500 text-sm mb-4">Salud y Bienestar</p>
-                    <button onclick="openFreeReader()" class="w-full bg-yellow-500 text-black py-3 rounded-xl font-black hover:bg-yellow-600 transition">LEER GRATIS AHORA</button>
+                    <button onclick="openFreeReader()" class="w-full bg-yellow-500 text-black py-4 rounded-xl font-black hover:bg-yellow-400 transition transform active:scale-95 shadow-lg shadow-yellow-500/20">LEER GRATIS AHORA</button>
                 </div>
 
-                <div class="bg-white p-6 rounded-3xl shadow-xl border border-slate-200 text-center opacity-50">
-                    <div class="bg-slate-200 w-full h-64 mb-4 rounded-lg flex items-center justify-center text-slate-400 italic font-bold">PREMIUM</div>
-                    <h3 class="font-bold text-xl">Amor Eterno</h3>
-                    <button class="w-full bg-slate-300 text-slate-500 py-2 rounded-xl font-bold cursor-not-allowed">Solo Suscriptores</button>
+                <div class="bg-slate-800/50 p-6 rounded-3xl border border-white/5 opacity-40 grayscale flex flex-col justify-between pointer-events-none">
+                    <div class="h-64 bg-slate-700 rounded-lg flex items-center justify-center font-bold">PREMIUM</div>
+                    <p class="mt-4 font-bold">Amor Eterno</p>
+                    <div class="mt-4 h-10 bg-slate-700 rounded-lg"></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <div id="reader-modal" class="fixed inset-0 bg-[#0f172a] hidden z-[60] flex flex-col p-6">
-        <div class="max-w-3xl mx-auto w-full flex-grow overflow-y-auto py-10">
-            <h2 id="reader-book-title" class="text-3xl font-bold text-yellow-500 mb-6 border-b border-white/10 pb-4"></h2>
-            <div id="reader-content" class="text-lg leading-relaxed text-slate-200 space-y-6"></div>
+    <div id="reader-modal" class="fixed inset-0 bg-slate-950 hidden z-[60] flex flex-col">
+        <div class="p-4 border-b border-white/10 flex justify-between items-center bg-[#0f172a]">
+            <span class="text-yellow-500 font-bold tracking-widest text-xs">LECTUVERSO READER</span>
+            <button onclick="closeReader()" class="bg-white/10 p-2 rounded-full hover:bg-red-500 transition">✕</button>
         </div>
-        <div class="max-w-3xl mx-auto w-full py-6 flex justify-between border-t border-white/10">
-            <button onclick="prevChapter()" class="text-slate-400 hover:text-white transition">← Anterior</button>
-            <span id="chapter-label" class="font-bold text-yellow-500">Capítulo 1</span>
-            <button onclick="nextChapter()" class="text-yellow-500 font-bold hover:text-white transition">Siguiente →</button>
+
+        <div class="flex-grow overflow-y-auto bg-slate-900 py-10 px-4 scroll-smooth">
+            <div class="max-w-2xl mx-auto">
+                <div id="reader-page-container" class="book-page">
+                    <div id="reader-content" class="book-content">
+                        </div>
+                    <div id="page-indicator" class="page-number"></div>
+                </div>
+            </div>
         </div>
-        <button onclick="closeReader()" class="absolute top-6 right-6 bg-white/10 p-2 rounded-full hover:bg-red-500 transition">✕</button>
+
+        <div class="p-6 bg-[#0f172a] border-t border-white/10 flex justify-between items-center">
+            <button onclick="prevChapter()" class="text-slate-400 hover:text-white flex items-center gap-2 transition">
+                <span class="text-xl">←</span> Anterior
+            </button>
+            <div class="h-1 w-32 bg-slate-800 rounded-full overflow-hidden">
+                <div id="reading-progress" class="h-full bg-yellow-500 transition-all duration-300" style="width: 0%"></div>
+            </div>
+            <button onclick="nextChapter()" class="text-yellow-500 font-black flex items-center gap-2 hover:text-white transition">
+                Siguiente <span class="text-xl">→</span>
+            </button>
+        </div>
     </div>
 
     <script>
         let currentChapter = 0;
+        
+        // Estructura del libro basada fielmente en el PDF
         const libroFree = {
-            titulo: "TDA vs TDAH: ¿De qué estamos hablando?",
-            capitulos: [
-                "INTRODUCCIÓN: No soy médico, no soy psicólogo, no soy neurólogo. Soy una persona curiosa -como vos- que alguna vez se preguntó por qué era tan difícil concentrarse...",
-                "CAPÍTULO 1: EL MOTOR QUE NO SE APAGA. Imagina que tu mente es un motor que nunca se apaga, ni siquiera de noche. No es solo falta de atención, es una forma distinta de procesar el mundo.",
-                "CAPÍTULO 2: MITOS Y REALIDADES. A menudo escuchamos que el TDA es 'falta de límites' o 'pereza'. Nada más lejos de la realidad. Aquí exploraremos las bases biológicas.",
-                "PÁGINA FINAL: Este es el final de la muestra gratuita del Tomo I."
+            titulo: "TDA vs TDAH",
+            subtitulo: "Entender la diferencia para comprendernos mejor",
+            paginas: [
+                {
+                    tipo: "portada",
+                    contenido: `<div class="text-center py-10">
+                        <h1 class="text-5xl font-black mb-4">TDA vs TDAH</h1>
+                        <p class="text-xl italic text-slate-600">Tomo I</p>
+                        <div class="w-16 h-1 bg-yellow-500 mx-auto my-8"></div>
+                        <p class="text-lg">Conocer para nombrar lo que nos pasa</p>
+                        <p class="mt-20 font-bold uppercase text-sm tracking-widest">Por Lectuverso</p>
+                    </div>`
+                },
+                {
+                    tipo: "texto",
+                    contenido: `<h2 class="text-3xl font-bold mb-8">Introducción</h2>
+                        <p>No soy médico, no soy psicólogo, no soy neurólogo.</p>
+                        <p>Soy una persona curiosa —como vos— que alguna vez se preguntó por qué era tan difícil concentrarse, por qué me costaba tanto terminar una tarea que parecía fácil...</p>
+                        <div class="highlight">Un día me encontré con esas siglas que suenan a trabalenguas: TDA, TDAH...</div>
+                        <p>Y empecé a leer, a preguntar, a observar, a escuchar historias, y cuanto más entendía, más claro me quedaba que no se trata de una "moda" ni de una excusa.</p>`
+                },
+                {
+                    tipo: "texto",
+                    contenido: `<p>...el motor nunca se apaga, ni siquiera de noche. Pero ¿qué significa eso? ¿Cómo se vive? ¿Qué lo causa? ¿Cómo lo acompañamos?</p>
+                        <p>No estoy acá para darte un diagnóstico, ni para explicarte un manual médico. Estoy acá para que charlemos, como si estuviéramos tomando un café o caminando...</p>
+                        <div class="highlight">Entender es el primer paso para acompañar.</div>`
+                }
             ]
         };
 
@@ -85,7 +138,6 @@
             document.getElementById(id + '-section').classList.remove('hidden');
         }
 
-        // FUNCIÓN CLAVE: Abre directamente sin mirar LocalStorage ni Planes
         function openFreeReader() {
             currentChapter = 0;
             updateReader();
@@ -94,9 +146,18 @@
         }
 
         function updateReader() {
-            document.getElementById('reader-book-title').innerText = libroFree.titulo;
-            document.getElementById('reader-content').innerHTML = `<p>${libroFree.capitulos[currentChapter]}</p>`;
-            document.getElementById('chapter-label').innerText = `Capítulo ${currentChapter + 1}`;
+            const container = document.getElementById('reader-content');
+            const pageData = libroFree.paginas[currentChapter];
+            
+            container.innerHTML = pageData.contenido;
+            
+            // Actualizar número de página y progreso
+            document.getElementById('page-indicator').innerText = `LECTUVERSO | PÁG. ${currentChapter + 1}`;
+            const progress = ((currentChapter + 1) / libroFree.paginas.length) * 100;
+            document.getElementById('reading-progress').style.width = progress + '%';
+            
+            // Scroll automático al inicio de la "página"
+            document.querySelector('.overflow-y-auto').scrollTop = 0;
         }
 
         function closeReader() { 
@@ -105,10 +166,12 @@
         }
 
         function nextChapter() { 
-            if(currentChapter < libroFree.capitulos.length - 1) { 
+            if(currentChapter < libroFree.paginas.length - 1) { 
                 currentChapter++; 
                 updateReader(); 
-            } 
+            } else {
+                alert("Has llegado al final de la muestra gratuita del Tomo I.");
+            }
         }
 
         function prevChapter() { 
@@ -118,7 +181,6 @@
             } 
         }
 
-        // Limpieza automática de cualquier bloqueo anterior al cargar la página
         window.onload = () => { localStorage.removeItem('plan'); };
     </script>
 </body>
