@@ -22,7 +22,7 @@
         <h1 class="text-2xl font-black text-gold-400 tracking-tighter">LECTUVERSO</h1>
         <div class="space-x-6 text-sm font-medium">
             <a href="#" onclick="showSection('hero')" class="hover:text-yellow-500 transition">Inicio</a>
-            <a href="#" onclick="showSection('catalog')" class="hover:text-yellow-500 transition">Catálogo</a>
+            <a href="#" onclick="openCatalogPage()" class="hover:text-yellow-500 transition">Catálogo</a>
             <a href="#" onclick="showSection('plans')" class="hover:text-yellow-500 transition font-bold text-yellow-500">Suscripciones</a>
         </div>
     </nav>
@@ -32,23 +32,13 @@
         <h2 class="text-6xl font-extrabold mb-6 leading-tight">Tu Puerta a la <br><span class="text-yellow-500">Sabiduría Protegida.</span></h2>
         <p class="text-slate-400 max-w-2xl mx-auto mb-10 text-lg">Únete a la élite de lectores con acceso a obras exclusivas bajo el estándar de seguridad más alto del mercado global.</p>
         <div class="flex flex-wrap justify-center gap-4">
-            <button onclick="showSection('catalog')" class="bg-yellow-500 text-black px-10 py-4 rounded-full font-bold hover:scale-105 transition shadow-lg shadow-yellow-500/20">Explorar Librería</button>
+            <button onclick="openCatalogPage()" class="bg-yellow-500 text-black px-10 py-4 rounded-full font-bold hover:scale-105 transition shadow-lg shadow-yellow-500/20">Explorar Librería</button>
             <button onclick="showSection('plans')" class="bg-white/10 text-white px-10 py-4 rounded-full font-bold hover:bg-white/20 transition">Ver Planes</button>
         </div>
     </section>
 
     <section id="catalog-section" class="hidden py-10 px-6 min-h-screen bg-slate-50 text-slate-900">
-        <div class="max-w-6xl mx-auto text-center">
-            <h2 class="text-4xl font-black mb-4 italic">Biblioteca <span class="text-yellow-500">Premium</span></h2>
-            <p class="text-slate-500 mb-12 uppercase text-xs font-bold tracking-widest">Contenido Cifrado</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="p-10 border-2 border-dashed border-slate-300 rounded-[40px] flex flex-col items-center justify-center hover:bg-white transition cursor-pointer">
-                    <span class="text-4xl mb-4">🔒</span>
-                    <h3 class="font-bold">Área Restringida</h3>
-                    <p class="text-[10px] text-slate-400 mt-2">Requiere Suscripción Activa</p>
-                </div>
-            </div>
-        </div>
+        <!-- Este se oculta; el catálogo abre en nueva página -->
     </section>
 
     <section id="plans-section" class="hidden py-20 px-6 bg-[#0f172a]">
@@ -60,19 +50,18 @@
         <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div class="glass p-8 rounded-[40px] flex flex-col border-b-8 border-slate-600">
                 <div class="mb-8">
-                    <h3 class="text-2xl font-bold mb-2">Plan Esencial</h3>
-                    <p class="text-slate-400 text-sm">Para lectores casuales.</p>
+                    <h3 class="text-2xl font-bold mb-2">Plan Básico</h3>
+                    <p class="text-slate-400 text-sm">Acceso limitado a capítulos.</p>
                 </div>
                 <div class="mb-8">
-                    <p class="text-5xl font-black" id="price-basic">$4.99<span class="text-lg font-normal text-slate-500">/mes</span></p>
+                    <p class="text-5xl font-black" id="price-basic">$15.000<span class="text-lg font-normal text-slate-500">/mes COP</span></p>
                 </div>
                 <ul class="text-sm space-y-4 mb-10 flex-grow">
-                    <li class="flex items-center gap-2"><span class="text-green-500">✔</span> Acceso a 50 títulos clásicos</li>
+                    <li class="flex items-center gap-2"><span class="text-green-500">✔</span> 2 capítulos de 3 libros</li>
                     <li class="flex items-center gap-2"><span class="text-green-500">✔</span> Lectura en 1 dispositivo</li>
-                    <li class="flex items-center gap-2 text-slate-500"><span class="text-slate-600">✘</span> Novedades del mes</li>
-                    <li class="flex items-center gap-2 text-slate-500"><span class="text-slate-600">✘</span> Descarga Offline</li>
+                    <li class="flex items-center gap-2 text-slate-500"><span class="text-slate-600">✘</span> Libros completos</li>
                 </ul>
-                <button onclick="openPayment('Esencial', 4.99)" class="w-full py-4 bg-white text-black rounded-2xl font-bold hover:bg-yellow-500 transition">Comenzar Ahora</button>
+                <button onclick="openPayment('Básico', 15000)" class="w-full py-4 bg-white text-black rounded-2xl font-bold hover:bg-yellow-500 transition">Comenzar Ahora</button>
             </div>
 
             <div class="glass p-10 rounded-[40px] flex flex-col border-b-8 border-yellow-500 scale-105 relative bg-white/5 ring-1 ring-yellow-500/50">
@@ -82,15 +71,13 @@
                     <p class="text-slate-300 text-sm">Acceso total para entusiastas.</p>
                 </div>
                 <div class="mb-8">
-                    <p class="text-6xl font-black" id="price-elite">$9.99<span class="text-lg font-normal text-slate-500">/mes</span></p>
+                    <p class="text-6xl font-black" id="price-elite">$35.000<span class="text-lg font-normal text-slate-500">/mes COP</span></p>
                 </div>
                 <ul class="text-sm space-y-4 mb-10 flex-grow">
-                    <li class="flex items-center gap-2"><span class="text-yellow-500 font-bold">✔</span> Biblioteca Completa (+10,000 libros)</li>
-                    <li class="flex items-center gap-2"><span class="text-yellow-500 font-bold">✔</span> Acceso a Estrenos Exclusivos</li>
-                    <li class="flex items-center gap-2"><span class="text-yellow-500 font-bold">✔</span> Lectura en 3 dispositivos simultáneos</li>
-                    <li class="flex items-center gap-2"><span class="text-yellow-500 font-bold">✔</span> Soporte prioritario 24/7</li>
+                    <li class="flex items-center gap-2"><span class="text-yellow-500 font-bold">✔</span> Biblioteca Completa</li>
+                    <li class="flex items-center gap-2"><span class="text-yellow-500 font-bold">✔</span> Acceso ilimitado</li>
                 </ul>
-                <button onclick="openPayment('Élite Premium', 9.99)" class="w-full py-5 bg-yellow-500 text-black rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-yellow-500/20 hover:scale-105 transition">Adquirir Élite</button>
+                <button onclick="openPayment('Élite Premium', 35000)" class="w-full py-5 bg-yellow-500 text-black rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-yellow-500/20 hover:scale-105 transition">Adquirir Élite</button>
             </div>
 
             <div class="glass p-8 rounded-[40px] flex flex-col border-b-8 border-blue-600">
@@ -99,13 +86,94 @@
                     <p class="text-slate-400 text-sm">Control total y beneficios VIP.</p>
                 </div>
                 <div class="mb-8">
-                    <p class="text-5xl font-black" id="price-master">$19.99<span class="text-lg font-normal text-slate-500">/mes</span></p>
+                    <p class="text-5xl font-black" id="price-master">$80.000<span class="text-lg font-normal text-slate-500">/mes COP</span></p>
                 </div>
                 <ul class="text-sm space-y-4 mb-10 flex-grow">
-                    <li class="flex items-center gap-2"><span class="text-blue-500">✔</span> Todo lo de Élite Premium</li>
-                    <li class="flex items-center gap-2"><span class="text-blue-500">✔</span> Descargas Offline ilimitadas</li>
-                    <li class="flex items-center gap-2"><span class="text-blue-500">✔</span> Dispositivos ilimitados</li>
-                    <li class="flex items-center gap-2"><span class="text-blue-500">✔</span> Invitación a Círculos de Lectura VIP</li>
-                    <li class="flex items-center gap-2"><span class="text-blue-500">✔</span> Regalo físico anual (Libro de Colección)</li>
+                    <li class="flex items-center gap-2"><span class="text-blue-500">✔</span> Todo lo de Élite</li>
+                    <li class="flex items-center gap-2"><span class="text-blue-500">✔</span> Descargas Offline</li>
                 </ul>
-                <button onclick="openPayment('Maestro Global', 19.99)" class="w-full py-4 border-2 border-blue-500 text-blue
+                <button onclick="openPayment('Maestro Global', 80000)" class="w-full py-4 border-2 border-blue-500 text-blue-400 rounded-2xl font-bold hover:bg-blue-600 hover:text-white transition">Ser Maestro</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal de Pago -->
+    <div id="payment-modal" class="fixed inset-0 bg-black/95 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white text-slate-900 p-8 rounded-[40px] max-w-md w-full relative shadow-2xl">
+            <h2 class="text-3xl font-black mb-1" id="modal-title">Check Out</h2>
+            <p class="text-xs text-slate-400 mb-8 uppercase font-bold tracking-widest">Transacción Cifrada</p>
+            
+            <form id="pay-form" class="space-y-4">
+                <div>
+                    <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Método de Pago</label>
+                    <select id="method-select" onchange="adjustPaymentFields()" class="w-full p-4 bg-slate-100 rounded-2xl border-none font-bold text-sm" required>
+                        <option value="bancolombia">Bancolombia</option>
+                        <option value="nequi">Nequi</option>
+                        <option value="card">Tarjeta de Crédito</option>
+                        <option value="paypal">PayPal</option>
+                    </select>
+                </div>
+
+                <div id="input-container">
+                    <label id="account-label" class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Número de Cuenta</label>
+                    <input type="text" id="account-input" placeholder="Ej: 123-456789-0" class="w-full p-4 bg-slate-100 rounded-2xl font-mono text-sm" required>
+                </div>
+
+                <div id="card-fields" class="hidden grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Expiración</label>
+                        <input type="text" placeholder="MM/AA" class="w-full p-4 bg-slate-100 rounded-2xl text-sm">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Código de Pago</label>
+                        <input type="password" placeholder="Ej: 1234" class="w-full p-4 bg-slate-100 rounded-2xl text-sm">
+                    </div>
+                </div>
+
+                <button type="submit" id="submit-btn" class="w-full py-5 bg-black text-white rounded-2xl font-black uppercase text-xs tracking-[0.2em] shadow-xl hover:bg-slate-800 transition">Procesar Suscripción</button>
+            </form>
+            <button onclick="closePayment()" class="w-full mt-6 text-slate-400 text-[10px] font-bold uppercase tracking-widest">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Modal de Lector -->
+    <div id="reader-modal" class="fixed inset-0 bg-black/95 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-800 text-white p-8 rounded-[40px] max-w-4xl w-full relative shadow-2xl">
+            <h2 class="text-2xl font-bold mb-4" id="reader-title">Modo de Lectura Segura</h2>
+            <div id="reader-content" class="text-lg leading-relaxed mb-6 max-h-96 overflow-y-auto"></div>
+            <div class="flex justify-between">
+                <button onclick="prevChapter()" class="bg-slate-600 px-4 py-2 rounded">Capítulo Anterior</button>
+                <button onclick="nextChapter()" class="bg-yellow-500 text-black px-4 py-2 rounded font-bold">Siguiente Capítulo</button>
+            </div>
+            <button onclick="closeReader()" class="absolute top-4 right-4 text-white">✕</button>
+        </div>
+    </div>
+
+    <!-- Modal de Pago por Libro -->
+    <div id="book-payment-modal" class="fixed inset-0 bg-black/95 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white text-slate-900 p-8 rounded-[40px] max-w-md w-full">
+            <h2 class="text-2xl font-bold mb-4">Pagar por Libro Completo</h2>
+            <p class="mb-4">Costo: $5.000 COP</p>
+            <button onclick="payForBook()" class="w-full bg-yellow-500 text-black py-2 rounded font-bold">Pagar Ahora</button>
+            <button onclick="upgradePlan()" class="w-full bg-blue-500 text-white py-2 rounded font-bold mt-2">Actualizar Plan</button>
+            <button onclick="closeBookPayment()" class="w-full text-slate-500 mt-4">Cancelar</button>
+        </div>
+    </div>
+
+    <footer class="p-10 text-[10px] text-slate-600 border-t border-white/5 bg-slate-950 text-center">
+        <p class="mb-2 font-bold text-slate-400 tracking-widest uppercase">Lectuverso Global Security Platform</p>
+        <p class="max-w-2xl mx-auto opacity-50">Cualquier infracción a los términos de uso resultará en bloqueo de IP y hardware. El soporte técnico atenderá sus dudas en magiccubicdesing@gmail.com.</p>
+    </footer>
+
+    <script>
+        const isColombia = true;
+        let currentBook = null;
+        let currentChapter = 1;
+        const library = {
+            amor1: { chapters: ["Capítulo 1: El encuentro bajo la lluvia...", "Capítulo 2: Secretos revelados...", "Capítulo 3: Fin del amor."] },
+            terror1: { chapters: ["Capítulo 1: El crujido de la madera...", "Capítulo 2: La sombra se acerca...", "Capítulo 3: El terror final."] },
+            superacion1: { chapters: ["Capítulo 1: La montaña no se movió...", "Capítulo 2: Fuerza interior...", "Capítulo 3: Victoria total."] }
+        };
+
+        function showSection(section) {
+            document.querySelectorAll('section').forEach(s => s.classList
