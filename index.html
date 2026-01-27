@@ -39,15 +39,16 @@
         <div class="max-w-6xl mx-auto">
             <h2 class="text-4xl font-black mb-10 italic text-center">Nuestra <span class="text-yellow-500">Colección</span></h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="bg-white p-6 rounded-3xl shadow-xl border border-yellow-500/30 text-center ring-2 ring-yellow-500/10">
-                    <div class="bg-slate-900 w-full h-64 mb-4 rounded-lg flex flex-col items-center justify-center text-yellow-500 p-4 shadow-inner">
-                        <span class="text-xs uppercase tracking-widest mb-2 text-slate-400">Tomo I</span>
-                        <h4 class="font-black text-xl leading-tight">¿DE QUÉ ESTAMOS HABLANDO?</h4>
-                        <span class="mt-4 text-[10px] text-slate-500">ACCESO LIBRE DE PRUEBA</span>
+                
+                <div class="bg-white p-6 rounded-3xl shadow-xl border-2 border-yellow-500 text-center">
+                    <div class="bg-slate-900 w-full h-64 mb-4 rounded-lg flex flex-col items-center justify-center text-yellow-500 p-4">
+                        <span class="text-xs uppercase tracking-widest mb-2 text-yellow-500/60">Contenido Gratuito</span>
+                        <h4 class="font-black text-xl leading-tight text-center">¿DE QUÉ ESTAMOS HABLANDO?</h4>
+                        <p class="text-[10px] mt-2 text-slate-400">LECTUVERSO FREE</p>
                     </div>
                     <h3 class="font-bold text-xl">TDA vs TDAH</h3>
                     <p class="text-slate-500 text-sm mb-4">Salud y Bienestar</p>
-                    <button onclick="openReader('tdatdah1')" class="w-full bg-yellow-500 text-black py-2 rounded-xl font-bold hover:bg-yellow-600 transition">Leer Ahora</button>
+                    <button onclick="openReader('tdatdah1')" class="w-full bg-yellow-500 text-black py-2 rounded-xl font-bold hover:bg-yellow-600 transition shadow-lg">Leer Gratis Ahora</button>
                 </div>
 
                 <div class="bg-white p-6 rounded-3xl shadow-xl border border-slate-200 text-center opacity-70">
@@ -84,32 +85,17 @@
                 <div class="glass p-8 rounded-[40px] border-b-8 border-slate-600 flex flex-col text-white">
                     <h3 class="text-2xl font-bold mb-4">Básico</h3>
                     <p class="text-4xl font-black mb-6">$15.000 <span class="text-xs text-slate-400">/mes</span></p>
-                    <ul class="text-sm space-y-4 mb-10 flex-grow">
-                        <li>✔ 10 libros seleccionados</li>
-                        <li>✔ Lectura protegida</li>
-                        <li>✔ Soporte básico</li>
-                    </ul>
-                    <button onclick="openPayment('Básico', 15000)" class="w-full py-4 bg-white text-black rounded-2xl font-bold hover:bg-yellow-500 transition">Pagar ahora</button>
+                    <button onclick="openPayment('Básico')" class="w-full py-4 bg-white text-black rounded-2xl font-bold">Pagar ahora</button>
                 </div>
-                <div class="glass p-10 rounded-[40px] border-b-8 border-yellow-500 bg-white/5 ring-1 ring-yellow-500/50 scale-105 flex flex-col text-white relative">
+                <div class="glass p-10 rounded-[40px] border-b-8 border-yellow-500 bg-white/5 ring-1 ring-yellow-500/50 scale-105 flex flex-col text-white">
                     <h3 class="text-2xl font-bold mb-4 text-yellow-500">Premium</h3>
                     <p class="text-4xl font-black mb-6">$25.000 <span class="text-xs text-slate-400">/mes</span></p>
-                    <ul class="text-sm space-y-4 mb-10 flex-grow">
-                        <li>✔ Acceso ilimitado</li>
-                        <li>✔ Estrenos exclusivos</li>
-                        <li>✔ Sin anuncios</li>
-                    </ul>
-                    <button onclick="openPayment('Premium', 25000)" class="w-full py-4 bg-yellow-500 text-black rounded-2xl font-bold shadow-lg shadow-yellow-500/20 hover:scale-105 transition">Pagar ahora</button>
+                    <button onclick="openPayment('Premium')" class="w-full py-4 bg-yellow-500 text-black rounded-2xl font-bold">Pagar ahora</button>
                 </div>
                 <div class="glass p-8 rounded-[40px] border-b-8 border-blue-600 flex flex-col text-white">
                     <h3 class="text-2xl font-bold mb-4 text-blue-400">Anual</h3>
                     <p class="text-4xl font-black mb-6">$220.000 <span class="text-xs text-slate-400">/año</span></p>
-                    <ul class="text-sm space-y-4 mb-10 flex-grow">
-                        <li>✔ Todo el plan Premium</li>
-                        <li>✔ Ahorra 2 meses</li>
-                        <li>✔ Regalo sorpresa</li>
-                    </ul>
-                    <button onclick="openPayment('Anual', 220000)" class="w-full py-4 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 transition">Pagar ahora</button>
+                    <button onclick="openPayment('Anual')" class="w-full py-4 bg-blue-600 text-white rounded-2xl font-bold">Pagar ahora</button>
                 </div>
             </div>
         </div>
@@ -129,22 +115,21 @@
     </div>
 
     <script>
-        let currentSuscripcion = null;
-        let readingBook = null;
         let currentChapter = 0;
+        let readingBook = null;
 
         const bibliotecaData = {
             tdatdah1: { 
                 titulo: "TDA vs TDAH: ¿De qué estamos hablando?", 
                 capitulos: [
-                    "INTRODUCCIÓN: No soy médico, no soy psicólogo, no soy neurólogo. Soy una persona curiosa -como vos- que alguna vez se preguntó por qué era tan difícil concentrarse, por qué cuesta tanto terminar una tarea fácil, o por qué alguien a quien queremos mucho no puede dejar de moverse o soñar despierto.",
+                    "INTRODUCCIÓN: No soy médico, no soy psicólogo, no soy neurólogo. Soy una persona curiosa -como vos- que alguna vez se preguntó por qué era tan difícil concentrarse, por qué cuesta tanto terminar una tarea fácil, o por qué alguien a quien quiero mucho no puede dejar de moverse o soñar despierto.",
                     "CAPÍTULO 1: EL MOTOR QUE NO SE APAGA. Imagina que tu mente es un motor que nunca se apaga, ni siquiera de noche. No es solo falta de atención, es una forma distinta de procesar el mundo.",
                     "CAPÍTULO 2: MITOS Y REALIDADES. A menudo escuchamos que el TDA es 'falta de límites' o 'pereza'. Nada más lejos de la realidad. Aquí exploraremos las bases biológicas y las diferencias reales."
                 ] 
             },
-            amor1: { titulo: "Amor Eterno", capitulos: ["Contenido bloqueado..."] },
-            terror1: { titulo: "Sombras Nocturnas", capitulos: ["Contenido bloqueado..."] },
-            superacion1: { titulo: "Venciendo Obstáculos", capitulos: ["Contenido bloqueado..."] }
+            amor1: { titulo: "Amor Eterno", capitulos: ["Contenido bloqueado: Se requiere suscripción."] },
+            terror1: { titulo: "Sombras Nocturnas", capitulos: ["Contenido bloqueado: Se requiere suscripción."] },
+            superacion1: { titulo: "Venciendo Obstáculos", capitulos: ["Contenido bloqueado: Se requiere suscripción."] }
         };
 
         function showSection(id) {
@@ -156,31 +141,39 @@
         function openPlans() { document.getElementById('plans-modal').classList.remove('hidden'); }
         function closePlans() { document.getElementById('plans-modal').classList.add('hidden'); }
 
-        // MODIFICADO: ELIMINADA RESTRICCIÓN PARA EL LIBRO DE TDAH
+        // --- OPTIMIZACIÓN FINAL ---
         function openReader(bookId) {
-            // Si el libro NO es el de TDAH y NO hay plan, pide suscribirse
-            if (bookId !== 'tdatdah1' && !localStorage.getItem('plan')) {
-                alert("Este libro requiere suscripción. Prueba el de TDA vs TDAH que es libre.");
-                openPlans();
-                return;
+            // SI EL ID ES EL DEL LIBRO GRATUITO, SALTAMOS TODA VERIFICACIÓN
+            if (bookId === 'tdatdah1') {
+                console.log("Acceso gratuito concedido para TDA vs TDAH");
+            } else {
+                // PARA CUALQUIER OTRO LIBRO, PEDIMOS PLAN
+                if (!localStorage.getItem('plan')) {
+                    alert("Este libro es parte de nuestra colección Premium. Suscríbete para leerlo.");
+                    openPlans();
+                    return;
+                }
             }
             
-            // Si es el de TDAH o tiene plan, abre directamente
             readingBook = bookId;
             currentChapter = 0;
             updateReader();
             document.getElementById('reader-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
         }
 
         function updateReader() {
             const book = bibliotecaData[readingBook];
-            const contentDiv = document.getElementById('reader-content');
             document.getElementById('reader-book-title').innerText = book.titulo;
-            contentDiv.innerHTML = `<p>${book.capitulos[currentChapter]}</p>`;
+            document.getElementById('reader-content').innerHTML = `<p>${book.capitulos[currentChapter]}</p>`;
             document.getElementById('chapter-label').innerText = `Capítulo ${currentChapter + 1}`;
         }
 
-        function closeReader() { document.getElementById('reader-modal').classList.add('hidden'); }
+        function closeReader() { 
+            document.getElementById('reader-modal').classList.add('hidden'); 
+            document.body.style.overflow = 'auto';
+        }
+
         function nextChapter() { 
             const book = bibliotecaData[readingBook];
             if(currentChapter < book.capitulos.length - 1) { 
@@ -188,7 +181,15 @@
                 updateReader(); 
             } 
         }
+
         function prevChapter() { if(currentChapter > 0) { currentChapter--; updateReader(); } }
+        
+        // Simulación de pago para probar los otros libros
+        function openPayment(plan) {
+            localStorage.setItem('plan', plan);
+            alert("Suscripción " + plan + " activada para pruebas.");
+            closePlans();
+        }
     </script>
 </body>
 </html>
