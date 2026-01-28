@@ -19,7 +19,7 @@
         .nav-btn { transition: all 0.2s; border-radius: 8px; padding: 8px 16px; font-weight: 600; font-size: 14px; }
         .nav-btn.active { background: #fbbf24 !important; color: #000 !important; }
 
-        /* El botón empieza totalmente oculto */
+        /* Estado inicial: Oculto total */
         #btn-admin { display: none !important; }
     </style>
 </head>
@@ -27,7 +27,7 @@
 
     <nav class="bg-slate-900 text-white p-4 sticky top-0 z-50 shadow-md">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-black text-yellow-500 tracking-tighter">LECTUVERSO</h1>
+            <h1 id="logo-secret" onclick="secretClickTrigger()" class="text-xl font-black text-yellow-500 tracking-tighter cursor-default select-none">LECTUVERSO</h1>
             <div class="flex gap-2">
                 <button onclick="switchView('user')" id="btn-user" class="nav-btn bg-slate-800 hover:bg-slate-700 active"> Biblioteca</button>
                 <button onclick="switchView('admin')" id="btn-admin" class="nav-btn bg-slate-800 hover:bg-slate-700"> Admin</button>
@@ -40,8 +40,8 @@
             <h2 class="text-2xl font-bold mb-6 text-center text-slate-800">Acceso Administrativo 🔐</h2>
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Usuario de Administrador</label>
-                    <input type="text" id="login-user" placeholder="Ingrese usuario" class="w-full border p-3 rounded-xl outline-none focus:border-yellow-500 transition">
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Usuario</label>
+                    <input type="text" id="login-user" placeholder="Lectuverso2026" class="w-full border p-3 rounded-xl outline-none focus:border-yellow-500 transition">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Contraseña</label>
@@ -62,17 +62,17 @@
         <div class="bg-white p-8 rounded-2xl shadow-xl border border-slate-200">
             <h3 class="text-lg font-bold mb-4"> Publicar Nuevo E-Book</h3>
             <div class="space-y-4">
-                <input type="text" id="book-title" placeholder="Título del Libro" class="w-full border p-3 rounded-xl outline-none focus:border-yellow-500 transition">
-                <select id="book-category" class="w-full border p-3 rounded-xl outline-none focus:border-yellow-500 transition">
+                <input type="text" id="book-title" placeholder="Título del Libro" class="w-full border p-3 rounded-xl outline-none">
+                <select id="book-category" class="w-full border p-3 rounded-xl outline-none">
                     <option value="">Seleccionar Categoría</option>
                     <option>Amor</option><option>Misterio</option><option>Terror</option><option>Autoayuda</option><option>Ciencia Ficción</option><option>Tecnología</option>
                 </select>
                 <div class="bg-yellow-50 p-4 rounded-xl border border-yellow-200">
-                    <label class="block text-xs font-bold text-yellow-700 mb-1 uppercase">Página final del segundo capítulo:</label>
-                    <input type="number" id="book-limit" placeholder="Ej: 15" class="w-full border p-3 rounded-xl outline-none focus:border-yellow-500 transition" min="1">
+                    <label class="block text-xs font-bold text-yellow-700 mb-1 uppercase">Página límite gratuita:</label>
+                    <input type="number" id="book-limit" placeholder="Ej: 15" class="w-full border p-3 rounded-xl outline-none">
                 </div>
                 <input type="file" id="book-file" accept="application/pdf" class="w-full border p-3 rounded-xl bg-slate-50">
-                <button onclick="uploadBook()" class="w-full bg-emerald-500 text-white py-4 rounded-xl font-bold text-lg hover:bg-emerald-600 transition shadow-lg">Publicar Ahora</button>
+                <button onclick="uploadBook()" class="w-full bg-emerald-500 text-white py-4 rounded-xl font-bold text-lg hover:bg-emerald-600 transition">Publicar Ahora</button>
             </div>
         </div>
     </div>
@@ -83,19 +83,16 @@
     </div>
 
     <div id="reader-modal" class="fixed inset-0 bg-black/95 hidden z-[100] flex flex-col">
-        <div class="bg-slate-900 p-4 flex justify-between items-center text-white border-b border-white/10">
-            <div>
-                <h3 id="reader-book-name" class="font-bold text-yellow-500"></h3>
-                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Lector Lectuverso</p>
-            </div>
-            <button onclick="closeReader()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg font-bold transition">Cerrar ✕</button>
+        <div class="bg-slate-900 p-4 flex justify-between items-center text-white">
+            <h3 id="reader-book-name" class="font-bold text-yellow-500"></h3>
+            <button onclick="closeReader()" class="bg-red-500 px-4 py-2 rounded-lg font-bold">Cerrar ✕</button>
         </div>
         <div class="flex-grow overflow-y-auto">
             <div id="pdf-render-container"></div>
             <div id="paywall" class="hidden bg-white text-slate-900 p-10 m-10 rounded-3xl max-w-lg mx-auto text-center shadow-2xl relative z-10">
                 <h2 class="text-2xl font-black mb-2 uppercase">📖 Muestra Finalizada</h2>
-                <p class="text-slate-500 mb-6">Has terminado de leer los capítulos gratuitos. Adquiere el libro completo para continuar.</p>
-                <button onclick="processPayment()" class="w-full bg-emerald-500 text-white py-4 rounded-xl font-bold uppercase hover:bg-emerald-600 transition shadow-lg mb-4">💳 Pagar y Desbloquear</button>
+                <p class="mb-6">Adquiere el libro completo para continuar la lectura.</p>
+                <button onclick="processPayment()" class="w-full bg-emerald-500 text-white py-4 rounded-xl font-bold shadow-lg">💳 Pagar y Desbloquear</button>
             </div>
         </div>
     </div>
@@ -103,56 +100,67 @@
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
         let library = JSON.parse(localStorage.getItem('lectuverso_db')) || [];
-        let currentOpenBook = null;
         let isAdminAuthenticated = false;
 
-        // --- LÓGICA SECRETA (FUNCINA ESCRIBIENDO O PEGANDO) ---
+        // --- LÓGICA DE REVELACIÓN MAESTRA ---
         function revealAdmin() {
+            console.log("Admin Revelado");
             const btn = document.getElementById('btn-admin');
             btn.style.setProperty('display', 'block', 'important');
+            btn.classList.add('animate-bounce'); // Un pequeño rebote para avisar
+            setTimeout(() => btn.classList.remove('animate-bounce'), 1000);
         }
 
-        let keysTyped = "";
-        window.addEventListener('keydown', (e) => {
-            keysTyped += e.key.toLowerCase();
-            if (keysTyped.includes("admin")) {
+        // 1. Detección por Teclado (Incluso si escribes en un input)
+        let inputBuffer = "";
+        document.addEventListener('keydown', (e) => {
+            inputBuffer += e.key.toLowerCase();
+            if (inputBuffer.includes("admin")) {
                 revealAdmin();
-                keysTyped = "";
+                inputBuffer = "";
             }
-        });
+            if (inputBuffer.length > 20) inputBuffer = inputBuffer.substring(10);
+        }, true);
 
-        // Detectar si el usuario PEGA la palabra admin
-        window.addEventListener('paste', (e) => {
-            let pasteData = (e.clipboardData || window.clipboardData).getData('text');
-            if (pasteData.toLowerCase().trim() === "admin") {
+        // 2. Detección por Pegado (Paste)
+        document.addEventListener('paste', (e) => {
+            const text = (e.clipboardData || window.clipboardData).getData('text');
+            if (text.toLowerCase().trim() === "admin") {
                 revealAdmin();
             }
-        });
+        }, true);
 
-        // Limpiar registro cada 3 segundos por si el usuario se equivoca al teclear
-        setInterval(() => { keysTyped = ""; }, 3000);
+        // 3. Plan B: Triple clic en el Logo
+        let clickCount = 0;
+        function secretClickTrigger() {
+            clickCount++;
+            if (clickCount >= 3) {
+                revealAdmin();
+                clickCount = 0;
+            }
+            setTimeout(() => clickCount = 0, 2000); // Reinicia si no hace los 3 clics rápido
+        }
 
+        // --- FUNCIONES DE NAVEGACIÓN ---
         function switchView(view) {
-            if (view === 'admin' && !isAdminAuthenticated) { view = 'login'; }
+            if (view === 'admin' && !isAdminAuthenticated) view = 'login';
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            const targetView = document.getElementById('view-' + view);
-            if(targetView) targetView.classList.add('active');
-            const btnId = (view === 'login') ? 'btn-admin' : 'btn-' + view;
-            const targetBtn = document.getElementById(btnId);
-            if(targetBtn) targetBtn.classList.add('active');
+            
+            document.getElementById('view-' + view).classList.add('active');
+            const btn = (view === 'login') ? 'btn-admin' : 'btn-' + view;
+            document.getElementById(btn).classList.add('active');
             if(view === 'user') renderLibrary();
         }
 
         function checkCredentials() {
-            const user = document.getElementById('login-user').value;
-            const pass = document.getElementById('login-pass').value;
-            if (user === "Lectuverso2026" && pass === "Lectuverso2026") {
+            const u = document.getElementById('login-user').value;
+            const p = document.getElementById('login-pass').value;
+            if (u === "Lectuverso2026" && p === "Lectuverso2026") {
                 isAdminAuthenticated = true;
-                alert("Acceso concedido 🔐");
                 switchView('admin');
             } else {
-                alert("Credenciales incorrectas ❌");
+                alert("Incorrecto");
             }
         }
 
@@ -162,17 +170,20 @@
             switchView('user');
         }
 
+        // --- GESTIÓN DE LIBROS ---
         function uploadBook() {
             const title = document.getElementById('book-title').value;
             const category = document.getElementById('book-category').value;
             const limit = document.getElementById('book-limit').value;
             const file = document.getElementById('book-file').files[0];
-            if (!title || !file || !limit) return alert("Completa todos los campos.");
+
+            if (!title || !file || !limit) return alert("Faltan datos");
+
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = (e) => {
                 library.push({ id: Date.now(), title, category, limit: parseInt(limit), pdfBase64: e.target.result });
                 localStorage.setItem('lectuverso_db', JSON.stringify(library));
-                alert("¡Libro publicado!");
+                alert("¡Libro Guardado!");
                 switchView('user');
             };
             reader.readAsDataURL(file);
@@ -180,59 +191,51 @@
 
         function renderLibrary() {
             const grid = document.getElementById('library-grid');
-            grid.innerHTML = library.length ? "" : "<p class='col-span-full text-center opacity-50'>Biblioteca vacía.</p>";
+            grid.innerHTML = library.length ? "" : "<p class='col-span-full text-center'>No hay libros.</p>";
             library.forEach(book => {
                 grid.innerHTML += `
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border hover:shadow-md transition cursor-pointer group" onclick="openBook(${book.id})">
-                        <div class="h-32 bg-slate-50 rounded-xl mb-4 flex items-center justify-center text-3xl group-hover:bg-yellow-50">📖</div>
-                        <h4 class="font-bold text-slate-800 truncate text-sm">${book.title}</h4>
-                        <p class="text-[10px] text-yellow-600 font-black uppercase mb-3">${book.category || 'General'}</p>
-                        <button class="w-full bg-slate-900 text-white py-2 rounded-lg text-[10px] font-bold group-hover:bg-yellow-500 group-hover:text-black transition">LEER AHORA</button>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border cursor-pointer hover:border-yellow-500 transition" onclick="openBook(${book.id})">
+                        <div class="h-32 bg-slate-100 rounded-xl mb-4 flex items-center justify-center text-3xl">📖</div>
+                        <h4 class="font-bold text-slate-800 truncate">${book.title}</h4>
+                        <p class="text-xs text-yellow-600 font-bold uppercase">${book.category || 'General'}</p>
                     </div>`;
             });
         }
 
         async function openBook(id) {
             const book = library.find(b => b.id === id);
-            currentOpenBook = book; 
             document.getElementById('reader-book-name').innerText = book.title;
             document.getElementById('reader-modal').classList.remove('hidden');
             document.getElementById('paywall').classList.add('hidden');
-            document.body.style.overflow = 'hidden';
+            
             const container = document.getElementById('pdf-render-container');
-            container.innerHTML = '<p class="text-white py-10">Cargando lectura gratuita...</p>';
+            container.innerHTML = '<p class="text-white text-center py-10">Cargando...</p>';
+
             try {
                 const base64 = book.pdfBase64.split(',')[1];
                 const bytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
                 const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
                 container.innerHTML = "";
-                const pageLimit = book.limit || 2; 
+                
                 for (let n = 1; n <= pdf.numPages; n++) {
-                    if (n > pageLimit) { 
+                    if (n > book.limit) {
                         document.getElementById('paywall').classList.remove('hidden');
-                        break; 
+                        break;
                     }
                     const page = await pdf.getPage(n);
                     const viewport = page.getViewport({ scale: 1.5 });
                     const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
                     canvas.height = viewport.height;
                     canvas.width = viewport.width;
-                    await page.render({ canvasContext: context, viewport: viewport }).promise;
+                    await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
                     container.appendChild(canvas);
                 }
-            } catch (err) {
-                container.innerHTML = '<p class="text-red-400">Error al cargar el PDF.</p>';
-            }
+            } catch (e) { alert("Error al abrir"); }
         }
 
         function closeReader() {
             document.getElementById('reader-modal').classList.add('hidden');
             document.body.style.overflow = 'auto';
-        }
-
-        function processPayment() {
-            alert(`Redirigiendo al pago de: ${currentOpenBook.title}`);
         }
 
         window.onload = renderLibrary;
