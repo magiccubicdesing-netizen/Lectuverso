@@ -1,180 +1,195 @@
-import React, { useState, useEffect } from 'react';
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lectuverso | Admin & Reading</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #0f172a; color: white; }
+        .book-page { font-family: 'Crimson Pro', serif; background: #fdfdfd; color: #1a1a1a; padding: 2rem; border-radius: 8px; min-height: 400px; }
+        .hidden { display: none; }
+        .category-chip { transition: all 0.3s; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); }
+        .category-chip:hover { background: #fbbf24; color: black; border-color: #fbbf24; }
+    </style>
+</head>
+<body>
 
-// --- COMPONENTES DE SEGURIDAD ---
-const SecurityWrapper = ({ children }) => {
-  useEffect(() => {
-    // Bloqueo de click derecho y teclas de inspección [cite: 387, 390]
-    const handleContext = (e) => e.preventDefault();
-    document.addEventListener('contextmenu', handleContext);
-    return () => document.removeEventListener('contextmenu', handleContext);
-  }, []);
-
-  return <div className="select-none">{children}</div>;
-};
-
-const LectuversoApp = () => {
-  const [user, setUser] = useState(null); // null, 'admin', 'usuario'
-  const [books, setBooks] = useState([
-    { id: 1, title: "TDA vs TDAH", author: "Lectuverso", category: "Salud", file: null },
-  ]);
-
-  const handleLogin = (u, p) => {
-    if (u === 'admi1' && p === 'admi1') setUser('admin');
-    else if (u === 'user' && p === 'user') setUser('usuario');
-    else alert("Credenciales incorrectas");
-  };
-
-  if (!user) return <LoginForm onLogin={handleLogin} />;
-
-  return (
-    <SecurityWrapper>
-      {user === 'admin' ? (
-        <AdminPanel books={books} setBooks={setBooks} logout={() => setUser(null)} />
-      ) : (
-        <UserPanel books={books} logout={() => setUser(null)} />
-      )}
-    </SecurityWrapper>
-  );
-};
-
-// --- 1. ACCESO ADMINISTRADOR (admi1) ---
-const AdminPanel = ({ books, setBooks, logout }) => {
-  const [newBook, setNewBook] = useState({ title: '', category: 'Amor', file: null });
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file && file.type === "application/pdf") {
-      // Creamos una URL temporal para el PDF local
-      setNewBook({ ...newBook, file: URL.createObjectURL(file) });
-    } else {
-      alert("Por favor sube un archivo PDF válido");
-    }
-  };
-
-  const publishBook = (e) => {
-    e.preventDefault();
-    if (!newBook.title || !newBook.file) return alert("Completa todos los campos");
-    
-    // Regla del Boy Scout: Código limpio y organizado [cite: 402, 403]
-    setBooks([...books, { ...newBook, id: Date.now() }]);
-    setNewBook({ title: '', category: 'Amor', file: null });
-    alert("¡Libro publicado con éxito en el catálogo!");
-  };
-
-  return (
-    <div className="min-h-screen bg-slate-900 text-white p-8">
-      <div className="max-w-4xl mx-auto bg-slate-800 p-6 rounded-xl border border-yellow-500/30">
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl font-black text-yellow-500">🛠️ PANEL ADMIN: admi1</h2>
-          <button onClick={logout} className="bg-red-500 px-4 py-2 rounded-lg text-sm">Cerrar Sesión</button>
+    <nav class="p-4 bg-slate-900 border-b border-white/10 flex justify-between items-center sticky top-0 z-50">
+        <h1 class="text-2xl font-black text-yellow-500">LECTUVERSO</h1>
+        <div class="flex items-center gap-4">
+            <span id="role-label" class="text-xs font-bold uppercase tracking-widest text-slate-400">Modo: Usuario</span>
+            <button onclick="toggleRole()" class="bg-yellow-500 text-black px-4 py-1 rounded-full text-xs font-bold hover:bg-yellow-400 transition">
+                CAMBIAR ROL
+            </button>
         </div>
+    </nav>
 
-        <form onSubmit={publishBook} className="grid grid-cols-1 gap-4 bg-slate-700 p-6 rounded-lg">
-          <h3 className="text-lg font-bold">Subir Nuevo Libro desde PC</h3>
-          <input 
-            type="text" placeholder="Título del Libro" 
-            className="p-3 bg-slate-900 rounded border border-slate-600 focus:outline-yellow-500"
-            value={newBook.title}
-            onChange={(e) => setNewBook({...newBook, title: e.target.value})}
-          />
-          <select 
-            className="p-3 bg-slate-900 rounded border border-slate-600"
-            onChange={(e) => setNewBook({...newBook, category: e.target.value})}
-          >
-            <option>Amor</option><option>Terror</option><option>Superación</option>
-          </select>
-          <div className="flex flex-col gap-2">
-            <label className="text-sm text-slate-400">Seleccionar archivo PDF:</label>
-            <input type="file" accept="application/pdf" onChange={handleFileChange} className="text-sm cursor-pointer" />
-          </div>
-          <button type="submit" className="bg-yellow-500 text-black font-black py-3 rounded-lg hover:bg-yellow-400 transition">
-            🚀 PUBLICAR EN LECTUVERSO
-          </button>
-        </form>
-      </div>
-    </div>
-  );
-};
-
-// --- 2. ACCESO USUARIO (Modificable) ---
-const UserPanel = ({ books, logout }) => {
-  const [selectedBook, setSelectedBook] = useState(null);
-
-  return (
-    <div className="min-h-screen bg-[#0f172a] text-white">
-      {/* Navbar estilo Código 2 */}
-      <nav className="p-6 flex justify-between items-center border-b border-white/10 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50">
-        <h1 className="text-2xl font-black text-yellow-500 tracking-tighter">LECTUVERSO</h1>
-        <div className="flex items-center gap-6">
-          <span className="text-xs text-slate-400">Plan Premium Activo</span>
-          <button onClick={logout} className="text-sm font-medium hover:text-red-400">Salir</button>
-        </div>
-      </nav>
-
-      {/* Catálogo dinámico */}
-      <main className="container mx-auto px-6 py-12">
-        <h2 className="text-4xl font-black mb-12 text-center text-yellow-500">Explora tu Biblioteca</h2>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {books.map((book) => (
-            <div key={book.id} className="bg-slate-800 p-5 rounded-3xl border border-white/5 hover:border-yellow-500/50 transition-all group">
-              <div className="bg-slate-700 w-full h-64 mb-4 rounded-2xl flex flex-col items-center justify-center relative overflow-hidden">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-yellow-500/50">{book.category}</span>
-                <h4 className="font-bold text-center px-4 text-xl mt-2">{book.title}</h4>
-                <div className="absolute inset-0 bg-yellow-500 opacity-0 group-hover:opacity-10 transition-opacity"></div>
-              </div>
-              <button 
-                onClick={() => setSelectedBook(book)}
-                className="w-full bg-slate-900 text-yellow-500 py-3 rounded-xl font-bold border border-yellow-500/20 hover:bg-yellow-500 hover:text-black transition"
-              >
-                LEER AHORA
-              </button>
+    <div id="admin-panel" class="hidden p-8 max-w-4xl mx-auto">
+        <h2 class="text-3xl font-bold mb-6 text-yellow-500">Panel de Control (Admin)</h2>
+        <div class="bg-slate-800 p-8 rounded-3xl border border-white/10">
+            <h3 class="text-xl font-bold mb-4">Subir Nuevo E-Book</h3>
+            <div class="space-y-4">
+                <input type="text" id="admin-title" placeholder="Título del libro" class="w-full bg-slate-900 border border-white/20 p-3 rounded-xl focus:outline-none focus:border-yellow-500">
+                <select id="admin-category" class="w-full bg-slate-900 border border-white/20 p-3 rounded-xl">
+                    <option value="Amor">Amor</option>
+                    <option value="Terror">Terror</option>
+                    <option value="Autoayuda">Autoayuda</option>
+                    <option value="Misterio">Misterio</option>
+                    <option value="Ciencia Ficción">Ciencia Ficción</option>
+                </select>
+                <div class="border-2 border-dashed border-white/20 p-10 rounded-xl text-center">
+                    <input type="file" id="admin-file" accept=".pdf" class="hidden">
+                    <label for="admin-file" class="cursor-pointer text-slate-400 hover:text-white transition">
+                        Haz clic aquí para cargar el archivo PDF desde tu PC
+                    </label>
+                </div>
+                <button onclick="publishBook()" class="w-full bg-yellow-500 text-black py-4 rounded-xl font-bold text-lg hover:bg-yellow-400">PUBLICAR EN CATÁLOGO</button>
             </div>
-          ))}
         </div>
-      </main>
+    </div>
 
-      {/* Lector de PDF Protegido */}
-      {selectedBook && (
-        <div className="fixed inset-0 bg-black z-[100] flex flex-col">
-          <div className="p-4 bg-slate-900 flex justify-between items-center border-b border-white/10">
-            <h3 className="text-yellow-500 font-bold">{selectedBook.title}</h3>
-            <button onClick={() => setSelectedBook(null)} className="text-2xl">✕</button>
-          </div>
-          <div className="flex-grow bg-slate-800 relative">
-             {/* Watermark dinámico para protección [cite: 323] */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] z-50">
-              <h1 className="text-9xl font-black rotate-45 text-white">LECTUVERSO PROTECTED</h1>
+    <div id="user-section" class="p-8">
+        <div id="categories" class="flex flex-wrap gap-2 mb-10 justify-center">
             </div>
-            {selectedBook.file ? (
-              <iframe src={selectedBook.file} className="w-full h-full border-none" title="Reader" />
-            ) : (
-              <div className="flex items-center justify-center h-full text-slate-500">
-                Archivo de muestra: El contenido real se carga al subir un PDF en el Admin.
-              </div>
-            )}
-          </div>
+
+        <div id="user-catalog" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            </div>
+    </div>
+
+    <div id="reader-modal" class="fixed inset-0 bg-slate-950 hidden z-[60] flex flex-col">
+        <div class="p-4 flex justify-between bg-slate-900">
+            <h3 id="reader-title" class="font-bold text-yellow-500"></h3>
+            <button onclick="closeReader()" class="text-white">Cerrar ✕</button>
         </div>
-      )}
+        <div class="flex-grow overflow-y-auto p-6 flex justify-center">
+            <div class="max-w-2xl w-full">
+                <div id="reader-content" class="book-page shadow-2xl"></div>
+                <div class="flex justify-between mt-6">
+                    <button onclick="changePage(-1)" class="bg-white/10 px-6 py-2 rounded-lg">Anterior</button>
+                    <button onclick="changePage(1)" class="bg-yellow-500 text-black px-6 py-2 rounded-lg font-bold">Siguiente</button>
+                </div>
+            </div>
+        </div>
     </div>
-  );
-};
 
-// Componente de Login básico para la demo
-const LoginForm = ({ onLogin }) => {
-  const [u, setU] = useState('');
-  const [p, setP] = useState('');
-  return (
-    <div className="h-screen flex items-center justify-center bg-slate-900 text-white p-6">
-      <div className="bg-slate-800 p-8 rounded-2xl shadow-2xl w-full max-w-md border border-white/5">
-        <h2 className="text-3xl font-black text-yellow-500 mb-6 text-center tracking-tighter">INGRESAR A LECTUVERSO</h2>
-        <input className="w-full p-4 mb-4 bg-slate-900 rounded-xl border border-slate-700" placeholder="Usuario" onChange={e => setU(e.target.value)} />
-        <input className="w-full p-4 mb-6 bg-slate-900 rounded-xl border border-slate-700" type="password" placeholder="Contraseña" onChange={e => setP(e.target.value)} />
-        <button onClick={() => onLogin(u, p)} className="w-full bg-yellow-500 text-black font-black py-4 rounded-xl hover:scale-[1.02] transition">ACCEDER AL UNIVERSO</button>
-        <p className="text-center mt-4 text-xs text-slate-500 uppercase tracking-widest">admi1 / admi1</p>
-      </div>
+    <div id="payment-modal" class="fixed inset-0 bg-black/90 hidden z-[70] flex items-center justify-center p-4">
+        <div class="bg-white text-slate-900 p-8 rounded-3xl max-w-md w-full">
+            <h2 class="text-2xl font-black mb-2">¡Desbloquea el libro completo!</h2>
+            <p class="text-slate-500 mb-6 text-sm">Has terminado los capítulos de prueba. Elige tu método de pago para continuar leyendo.</p>
+            
+            <form class="space-y-4">
+                <div class="grid grid-cols-3 gap-2">
+                    <button type="button" class="border p-2 rounded-lg text-[10px] font-bold hover:bg-slate-100">TARJETA CRÉDITO</button>
+                    <button type="button" class="border p-2 rounded-lg text-[10px] font-bold hover:bg-slate-100">PAYPAL / BINANCE</button>
+                    <button type="button" class="border p-2 rounded-lg text-[10px] font-bold hover:bg-slate-100">TRANSFERENCIA</button>
+                </div>
+                
+                <select class="w-full border p-3 rounded-xl text-sm">
+                    <option>Selecciona tu Banco / Plataforma</option>
+                    <option>Bancolombia / Nequi (Colombia)</option>
+                    <option>BBVA (México/España)</option>
+                    <option>Santander (Latam)</option>
+                    <option>Mercado Pago</option>
+                </select>
+
+                <input type="text" placeholder="Número de Tarjeta / Cuenta" class="w-full border p-3 rounded-xl">
+                <div class="flex gap-2">
+                    <input type="text" placeholder="MM/AA" class="w-1/2 border p-3 rounded-xl">
+                    <input type="password" placeholder="CVC / Código" class="w-1/2 border p-3 rounded-xl">
+                </div>
+                
+                <button type="button" onclick="confirmPayment()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold">PAGAR AHORA</button>
+                <button type="button" onclick="closePayment()" class="w-full text-slate-400 text-sm">Cancelar</button>
+            </form>
+        </div>
     </div>
-  );
-};
 
-export default LectuversoApp;
+    <script>
+        let isAdmin = false;
+        let currentPage = 0;
+        let books = [
+            { id: 1, title: 'TDA vs TDAH', category: 'Autoayuda', content: ['Capítulo 1: El inicio...', 'Capítulo 2: Profundizando...', 'BLOQUEADO: CAP 3', 'BLOQUEADO: CAP 4'] }
+        ];
+
+        // 20 Categorías
+        const cats = ["Amor", "Misterio", "Terror", "Autoayuda", "Ciencia Ficción", "Historia", "Cocina", "Negocios", "Infantil", "Poesía", "Salud", "Viajes", "Biografía", "Arte", "Deportes", "Religión", "Tecnología", "Thriller", "Filosofía", "Cómic"];
+
+        function init() {
+            const catContainer = document.getElementById('categories');
+            cats.forEach(c => {
+                catContainer.innerHTML += `<span class="category-chip px-4 py-2 rounded-full text-xs font-bold">${c}</span>`;
+            });
+            renderCatalog();
+        }
+
+        function toggleRole() {
+            isAdmin = !isAdmin;
+            document.getElementById('role-label').innerText = isAdmin ? "Modo: Administrador" : "Modo: Usuario";
+            document.getElementById('admin-panel').classList.toggle('hidden', !isAdmin);
+            document.getElementById('user-section').classList.toggle('hidden', isAdmin);
+        }
+
+        function publishBook() {
+            const title = document.getElementById('admin-title').value;
+            const category = document.getElementById('admin-category').value;
+            if(!title) return alert("Pon un título");
+            
+            books.push({
+                id: Date.now(),
+                title: title,
+                category: category,
+                content: ["Capítulo 1: Contenido del PDF subido...", "Capítulo 2: Más contenido...", "BLOQUEADO", "BLOQUEADO"]
+            });
+            alert("¡Libro publicado automáticamente en el catálogo de usuarios!");
+            renderCatalog();
+        }
+
+        function renderCatalog() {
+            const catalog = document.getElementById('user-catalog');
+            catalog.innerHTML = '';
+            books.forEach(b => {
+                catalog.innerHTML += `
+                    <div class="bg-slate-800 p-6 rounded-2xl border border-white/5 hover:border-yellow-500 transition cursor-pointer" onclick="openReader(${b.id})">
+                        <div class="h-40 bg-slate-900 rounded-lg mb-4 flex items-center justify-center text-yellow-500 font-bold">PDF</div>
+                        <h4 class="font-bold">${b.title}</h4>
+                        <p class="text-xs text-slate-400">${b.category}</p>
+                    </div>
+                `;
+            });
+        }
+
+        let currentBook = null;
+        function openReader(id) {
+            currentBook = books.find(b => b.id === id);
+            currentPage = 0;
+            updateReader();
+            document.getElementById('reader-modal').classList.remove('hidden');
+        }
+
+        function changePage(dir) {
+            const nextP = currentPage + dir;
+            if(nextP >= 2) {
+                document.getElementById('payment-modal').classList.remove('hidden');
+                return;
+            }
+            if(nextP >= 0 && nextP < currentBook.content.length) {
+                currentPage = nextP;
+                updateReader();
+            }
+        }
+
+        function updateReader() {
+            document.getElementById('reader-title').innerText = currentBook.title;
+            document.getElementById('reader-content').innerHTML = `<p class="text-xl mb-4 font-bold">Página ${currentPage + 1}</p><p>${currentBook.content[currentPage]}</p>`;
+        }
+
+        function closeReader() { document.getElementById('reader-modal').classList.add('hidden'); }
+        function closePayment() { document.getElementById('payment-modal').classList.add('hidden'); }
+        function confirmPayment() { alert("Procesando pago... ¡Libro desbloqueado!"); closePayment(); }
+
+        init();
+    </script>
+</body>
+</html>
