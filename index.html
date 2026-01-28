@@ -18,6 +18,9 @@
         
         .nav-btn { transition: all 0.2s; border-radius: 8px; padding: 8px 16px; font-weight: 600; font-size: 14px; }
         .nav-btn.active { background: #fbbf24; color: #000; }
+
+        /* EL TRUCO: El botón de admin está oculto por defecto */
+        #btn-admin { display: none; }
     </style>
 </head>
 <body class="bg-slate-50">
@@ -103,8 +106,20 @@
         let currentOpenBook = null;
         let isAdminAuthenticated = false;
 
+        // LÓGICA SECRETA: Escuchar el teclado para revelar el botón Admin
+        let secretInput = "";
+        window.addEventListener('keydown', (e) => {
+            secretInput += e.key.toLowerCase();
+            // Si escribes "admin", el botón aparece
+            if (secretInput.includes("admin")) {
+                document.getElementById('btn-admin').style.display = "block";
+                secretInput = ""; // Reiniciar
+            }
+            // Evitar que la variable crezca infinitamente
+            if (secretInput.length > 10) secretInput = "";
+        });
+
         function switchView(view) {
-            // Si intenta entrar a admin sin estar autenticado, forzamos la vista de login
             if (view === 'admin' && !isAdminAuthenticated) {
                 view = 'login';
             }
@@ -115,7 +130,6 @@
             const targetView = document.getElementById('view-' + view);
             if(targetView) targetView.classList.add('active');
             
-            // Estética del botón de navegación
             const btnId = (view === 'login') ? 'btn-admin' : 'btn-' + view;
             const targetBtn = document.getElementById(btnId);
             if(targetBtn) targetBtn.classList.add('active');
@@ -131,7 +145,6 @@
                 isAdminAuthenticated = true;
                 alert("Acceso concedido 🔐");
                 switchView('admin');
-                // Limpiar campos
                 document.getElementById('login-user').value = "";
                 document.getElementById('login-pass').value = "";
             } else {
@@ -141,6 +154,7 @@
 
         function logout() {
             isAdminAuthenticated = false;
+            document.getElementById('btn-admin').style.display = "none"; // Ocultar de nuevo al salir
             switchView('user');
         }
 
