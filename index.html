@@ -2,82 +2,6 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Control Interno | Lectuverso</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-</head>
-<body class="bg-slate-900 text-slate-100 p-8 font-['Inter']">
-
-    <div class="max-w-4xl mx-auto">
-        <header class="flex justify-between items-center mb-10 border-b border-slate-700 pb-6">
-            <h1 class="text-2xl font-black text-yellow-500">PANEL DE CONTROL</h1>
-            <a href="index.html" class="text-xs bg-slate-800 px-4 py-2 rounded-lg hover:bg-slate-700">Ver Web Pública</a>
-        </header>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700">
-                <h2 class="text-lg font-bold mb-4 text-emerald-400">Subir Nuevo Libro</h2>
-                <div class="space-y-4">
-                    <input type="text" id="t" placeholder="Título" class="w-full bg-slate-900 border-none p-3 rounded-xl">
-                    <select id="c" class="w-full bg-slate-900 border-none p-3 rounded-xl">
-                        <option>Amor</option><option>Misterio</option><option>Autoayuda</option>
-                    </select>
-                    <input type="number" id="l" placeholder="Límite Páginas Gratis" class="w-full bg-slate-900 border-none p-3 rounded-xl">
-                    <input type="file" id="f" accept="application/pdf" class="text-xs text-slate-400">
-                    <button onclick="save()" class="w-full bg-emerald-600 py-4 rounded-xl font-black hover:bg-emerald-500 transition">PUBLICAR AHORA</button>
-                </div>
-            </div>
-
-            <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700">
-                <h2 class="text-lg font-bold mb-4 text-yellow-500">Libros Activos</h2>
-                <div id="list" class="space-y-2"></div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        let db = JSON.parse(localStorage.getItem('lectuverso_db')) || [];
-
-        function save() {
-            const t = document.getElementById('t').value, f = document.getElementById('f').files[0];
-            if(!t || !f) return alert("Datos incompletos");
-            
-            const r = new FileReader();
-            r.onload = (e) => {
-                db.push({ id: Date.now(), title: t, category: document.getElementById('c').value, limit: document.getElementById('l').value, pdfBase64: e.target.result });
-                localStorage.setItem('lectuverso_db', JSON.stringify(db));
-                location.reload();
-            };
-            r.readAsDataURL(f);
-        }
-
-        function remove(id) {
-            if(confirm("¿Eliminar este libro de la biblioteca pública?")) {
-                db = db.filter(b => b.id !== id);
-                localStorage.setItem('lectuverso_db', JSON.stringify(db));
-                location.reload();
-            }
-        }
-
-        function render() {
-            const list = document.getElementById('list');
-            list.innerHTML = db.length ? "" : "No hay libros publicados.";
-            db.forEach(b => {
-                list.innerHTML += `
-                    <div class="flex justify-between items-center bg-slate-900 p-3 rounded-xl">
-                        <span class="text-xs font-bold truncate w-40">${b.title}</span>
-                        <button onclick="remove(${b.id})" class="text-[10px] bg-red-900/30 text-red-500 px-3 py-1 rounded-lg border border-red-500/20 hover:bg-red-500 hover:text-white transition">Eliminar</button>
-                    </div>`;
-            });
-        }
-        render();
-    </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lectuverso | Biblioteca Digital</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -94,7 +18,8 @@
     <nav class="bg-slate-900 text-white p-4 sticky top-0 z-50 shadow-md">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
             <h1 class="text-xl font-black text-yellow-500 tracking-tighter">LECTUVERSO</h1>
-            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Lector Premium</span>
+            <div id="admin-nav-zone">
+                </div>
         </div>
     </nav>
 
@@ -121,6 +46,20 @@
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
         let library = JSON.parse(localStorage.getItem('lectuverso_db')) || [];
+
+        // DETECCIÓN DE MODO ADMIN (La magia está aquí)
+        function checkAdminSession() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('auth') === 'admin_active') {
+                document.getElementById('admin-nav-zone').innerHTML = `
+                    <a href="admin-lectuverso.html" class="bg-yellow-500 text-black text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter hover:bg-yellow-400">Regresar al Panel Admin</a>
+                `;
+            } else {
+                document.getElementById('admin-nav-zone').innerHTML = `
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Lector Premium</span>
+                `;
+            }
+        }
 
         function renderLibrary() {
             const grid = document.getElementById('library-grid');
@@ -163,4 +102,24 @@
                     const page = await pdf.getPage(n);
                     const viewport = page.getViewport({ scale: 1.5 });
                     const canvas = document.createElement('canvas');
-                    await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
+                    const context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    await page.render({ canvasContext: context, viewport: viewport }).promise;
+                    container.appendChild(canvas);
+                }
+            } catch (err) { alert("Error al cargar el PDF."); closeReader(); }
+        }
+
+        function closeReader() {
+            document.getElementById('reader-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        window.onload = () => {
+            renderLibrary();
+            checkAdminSession();
+        };
+    </script>
+</body>
+</html>
