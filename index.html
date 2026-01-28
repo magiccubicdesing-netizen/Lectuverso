@@ -19,7 +19,6 @@
         .nav-btn { transition: all 0.2s; border-radius: 8px; padding: 8px 16px; font-weight: 600; font-size: 14px; }
         .nav-btn.active { background: #fbbf24; color: #000; }
 
-        /* Estilos del Soporte */
         #support-modal { 
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
             transform: translateY(20px); 
@@ -79,7 +78,7 @@
             <div id="paywall" class="hidden bg-white text-slate-900 p-10 m-10 rounded-3xl max-w-lg mx-auto text-center shadow-2xl relative z-10">
                 <h2 class="text-2xl font-black mb-4 uppercase">Contenido Bloqueado</h2>
                 <p class="text-slate-500 mb-6">Disfruta la versión completa pagando este ejemplar.</p>
-                <button onclick="alert('Sistema de pago próximamente')" class="w-full bg-yellow-500 text-black py-4 rounded-xl font-bold uppercase hover:bg-yellow-400">Desbloquear E-Book</button>
+                <button onclick="contactSupport()" class="w-full bg-yellow-500 text-black py-4 rounded-xl font-bold uppercase hover:bg-yellow-400">Desbloquear por WhatsApp</button>
             </div>
         </div>
     </div>
@@ -93,13 +92,12 @@
             <div class="p-5 space-y-4">
                 <p class="text-xs text-slate-500">¿Tienes problemas con un libro o tu pago? Escríbenos directamente.</p>
                 <div class="flex flex-col gap-2">
-                    <a href="mailto:magiccubicdesing@gmail.com?subject=Soporte%20Lectuverso&body=Hola%20equipo%20de%20Lectuverso,%20tengo%20la%20siguiente%20consulta:" 
-                       class="flex items-center justify-center gap-2 w-full bg-slate-900 text-white py-3 rounded-xl text-xs font-bold hover:bg-slate-800 transition">
-                        📧 Enviar Gmail Directo
+                    <a href="mailto:magiccubicdesing@gmail.com?subject=Soporte%20Lectuverso" class="flex items-center justify-center gap-2 w-full bg-slate-900 text-white py-3 rounded-xl text-xs font-bold hover:bg-slate-800 transition">
+                        📧 Enviar Gmail
                     </a>
-                    <a href="https://wa.me/tu_numero" target="_blank" class="flex items-center justify-center gap-2 w-full bg-green-500 text-white py-3 rounded-xl text-xs font-bold hover:bg-green-600 transition">
+                    <button onclick="contactSupport()" class="flex items-center justify-center gap-2 w-full bg-green-500 text-white py-3 rounded-xl text-xs font-bold hover:bg-green-600 transition">
                         💬 WhatsApp Soporte
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
@@ -111,6 +109,7 @@
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
         let library = JSON.parse(localStorage.getItem('lectuverso_db')) || [];
+        let currentOpenBook = null;
 
         function switchView(view) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -122,6 +121,19 @@
 
         function toggleSupport() {
             document.getElementById('support-modal').classList.toggle('active');
+        }
+
+        // FUNCIÓN OPTIMIZADA DE WHATSAPP
+        function contactSupport() {
+            const phoneNumber = "573022822216";
+            let message = "Hola Lectuverso, necesito ayuda con la plataforma.";
+            
+            if (currentOpenBook) {
+                message = `Hola, me interesa desbloquear el libro: *${currentOpenBook.title}*. ¿Me dan información del pago?`;
+            }
+            
+            const wpUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(wpUrl, '_blank');
         }
 
         function uploadBook() {
@@ -157,6 +169,7 @@
 
         async function openBook(id) {
             const book = library.find(b => b.id === id);
+            currentOpenBook = book; // Guardamos el libro actual para el soporte
             document.getElementById('reader-book-name').innerText = book.title;
             document.getElementById('reader-modal').classList.remove('hidden');
             document.getElementById('paywall').classList.add('hidden');
@@ -165,28 +178,33 @@
             const container = document.getElementById('pdf-render-container');
             container.innerHTML = `<p class="text-white py-10 animate-pulse">Cargando...</p>`;
 
-            const base64 = book.pdfBase64.split(',')[1];
-            const bytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
-            const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
-            
-            container.innerHTML = "";
-            for (let n = 1; n <= pdf.numPages; n++) {
-                if (n > 2) { 
-                    document.getElementById('paywall').classList.remove('hidden');
-                    break; 
+            try {
+                const base64 = book.pdfBase64.split(',')[1];
+                const bytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+                const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
+                
+                container.innerHTML = "";
+                for (let n = 1; n <= pdf.numPages; n++) {
+                    if (n > 2) { 
+                        document.getElementById('paywall').classList.remove('hidden');
+                        break; 
+                    }
+                    const page = await pdf.getPage(n);
+                    const viewport = page.getViewport({ scale: 1.5 });
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    await page.render({ canvasContext: context, viewport: viewport }).promise;
+                    container.appendChild(canvas);
                 }
-                const page = await pdf.getPage(n);
-                const viewport = page.getViewport({ scale: 1.3 });
-                const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
-                await page.render({ canvasContext: context, viewport: viewport }).promise;
-                container.appendChild(canvas);
+            } catch (err) {
+                container.innerHTML = `<p class="text-red-400">Error al cargar el PDF.</p>`;
             }
         }
 
         function closeReader() {
+            currentOpenBook = null;
             document.getElementById('reader-modal').classList.add('hidden');
             document.body.style.overflow = 'auto';
         }
