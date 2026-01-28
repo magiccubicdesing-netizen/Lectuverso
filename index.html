@@ -97,16 +97,19 @@
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
         let library = JSON.parse(localStorage.getItem('lectuverso_db')) || [];
         let currentOpenBook = null;
-        let isAdminAuthenticated = false; // Estado de la contraseña
+        let isAdminAuthenticated = false;
 
         function switchView(view) {
-            // LÓGICA DE CONTRASEÑA
+            // VALIDACIÓN DE USUARIO Y CONTRASEÑA
             if (view === 'admin' && !isAdminAuthenticated) {
+                const username = prompt("Ingrese el nombre de administrador:");
                 const password = prompt("Ingrese la contraseña de administrador:");
-                if (password === "ADMIN123") {
+
+                if (username === "Lectuverso2026" && password === "Lectuverso2026") {
                     isAdminAuthenticated = true;
+                    alert("Acceso concedido 🔐");
                 } else {
-                    alert("Contraseña incorrecta.");
+                    alert("Credenciales incorrectas. Acceso denegado ❌");
                     return;
                 }
             }
