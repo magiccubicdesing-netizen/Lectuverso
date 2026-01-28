@@ -1,192 +1,155 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Book Reader System</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-    <style>
-        /* CSS UNIFICADO */
-        :root {
-            --primary: #2563eb;
-            --dark: #1e293b;
-            --light: #f8fafc;
-        }
+import React, { useState } from 'react';// Simulación de una base de datos de libros (Estado Global)const LectuversoApp = () => {
 
-        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; color: var(--dark); }
-        
-        nav { background: var(--dark); padding: 1rem; text-align: center; position: sticky; top: 0; z-index: 100; }
-        nav button { 
-            background: #334155; color: white; border: none; padding: 10px 20px; 
-            margin: 0 5px; cursor: pointer; border-radius: 6px; transition: 0.3s;
-        }
-        nav button:hover { background: var(--primary); }
+  const [user, setUser] = useState(null); // null, 'admin', o 'usuario'
 
-        .view { display: none; padding: 40px 20px; max-width: 1000px; margin: auto; min-height: 80vh; }
-        .active { display: block; animation: fadeIn 0.5s; }
+  const [books, setBooks] = useState([
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    { id: 1, title: "El Principito", author: "Saint-Exupéry", category: "Reflowable" },
 
-        /* Estilo Admin */
-        .upload-box { 
-            background: white; padding: 30px; border-radius: 12px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center;
-        }
-        input[type="text"], input[type="file"] { 
-            display: block; width: 80%; margin: 15px auto; padding: 10px; border: 1px solid #ddd; border-radius: 5px;
-        }
-        .btn-pub { background: #10b981; color: white; border: none; padding: 12px 30px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+  ]);
 
-        /* Estilo Biblioteca Usuario */
-        .grid-books { 
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 25px; 
-        }
-        .book-card { 
-            background: white; padding: 20px; border-radius: 10px; text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05); cursor: pointer; transition: 0.3s;
-        }
-        .book-card:hover { transform: translateY(-10px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .book-icon { font-size: 50px; display: block; margin-bottom: 10px; }
 
-        /* Lector Modal */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); overflow-y: auto; }
-        .modal-content { margin: 20px auto; width: 90%; max-width: 900px; background: #525659; padding: 15px; border-radius: 8px; }
-        #pdf-viewer canvas { display: block; margin: 10px auto; box-shadow: 0 0 15px rgba(0,0,0,0.5); max-width: 100%; }
-        .close-btn { position: sticky; top: 0; float: right; background: #ef4444; color: white; border: none; padding: 10px 15px; cursor: pointer; border-radius: 5px; z-index: 101; }
-    </style>
-</head>
-<body>
 
-    <nav>
-        <button onclick="switchView('user')">📚 Vista Usuario</button>
-        <button onclick="switchView('admin')">⚙️ Vista Administrador</button>
-    </nav>
+  // Manejo de Login
 
-    <section id="admin-view" class="view">
-        <h1>Panel de Administración</h1>
-        <div class="upload-box">
-            <h3>Subir Nuevo E-Book</h3>
-            <p>El libro se publicará automáticamente en la biblioteca del usuario.</p>
-            <input type="text" id="book-title" placeholder="Nombre del Libro">
-            <input type="file" id="pdf-upload" accept=".pdf">
-            <button class="btn-pub" onclick="uploadBook()">Publicar en Biblioteca</button>
-        </div>
-    </section>
+  const handleLogin = (u, p) => {
 
-    <section id="user-view" class="view active">
-        <h1>Mi Biblioteca Digital</h1>
-        <div id="library-container" class="grid-books">
-            </div>
-    </section>
+    if (u === 'admi1' && p === 'admi1') {
 
-    <div id="reader-modal" class="modal">
-        <button class="close-btn" onclick="closeReader()">X Cerrar Lector</button>
-        <div class="modal-content">
-            <div id="pdf-viewer"></div>
-        </div>
+      setUser('admin');
+
+    } else if (u === 'user' && p === 'user') {
+
+      setUser('usuario');
+
+    } else {
+
+      alert("Credenciales incorrectas");
+
+    }
+
+  };
+
+
+
+  if (!user) return <LoginForm onLogin={handleLogin} />;
+
+  return user === 'admin' ? 
+
+    <AdminPanel books={books} setBooks={setBooks} logout={() => setUser(null)} /> : 
+
+    <UserPanel books={books} logout={() => setUser(null)} />;
+
+};
+
+const AdminPanel = ({ books, setBooks, logout }) => {
+
+  const [newBook, setNewBook] = useState({ title: '', author: '', type: 'Reflowable' });
+
+
+
+  const publishBook = (e) => {
+
+    e.preventDefault();
+
+    // Regla del Boy Scout: Código limpio y validado [cite: 177, 180]
+
+    if (!newBook.title) return;
+
+    setBooks([...books, { ...newBook, id: Date.now() }]);
+
+    setNewBook({ title: '', author: '', type: 'Reflowable' });
+
+    alert("¡Libro publicado en el Lectuverso!");
+
+  };
+
+
+
+  return (
+
+    <div style={{ padding: '20px', backgroundColor: '#f0f4f8' }}>
+
+      <h2>🔐 Panel Exclusivo: Administrador (admi1)</h2>
+
+      <form onSubmit={publishBook} style={{ marginBottom: '30px', border: '1px solid #ccc', padding: '15px' }}>
+
+        <h3>Agregar Nuevo E-book</h3>
+
+        <input 
+
+          placeholder="Título del libro" 
+
+          value={newBook.title}
+
+          onChange={(e) => setNewBook({...newBook, title: e.target.value})}
+
+        />
+
+        <select onChange={(e) => setNewBook({...newBook, type: e.target.value})}>
+
+          <option value="Reflowable">Texto Ajustable (Novela)</option>
+
+          <option value="Fixed-Layout">Diseño Fijo (Cómic)</option>
+
+        </select>
+
+        <button type="submit">🚀 Publicar Ahora</button>
+
+      </form>
+
+      <button onClick={logout}>Cerrar Sesión</button>
+
     </div>
 
-    <script>
-        // CONFIGURACIÓN DE PDF.JS
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+  );
 
-        // Base de datos cargada desde LocalStorage
-        let library = JSON.parse(localStorage.getItem('myBooks')) || [];
+};
 
-        // Cambiar Vistas
-        function switchView(view) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.getElementById(view + '-view').classList.add('active');
-            if(view === 'user') renderLibrary();
-        }
+const UserPanel = ({ books, logout }) => {
 
-        // Función para guardar y subir
-        function uploadBook() {
-            const fileInput = document.getElementById('pdf-upload');
-            const titleInput = document.getElementById('book-title');
+  return (
 
-            if (fileInput.files.length > 0 && titleInput.value.trim() !== "") {
-                const file = fileInput.files[0];
-                const reader = new FileReader();
+    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
 
-                reader.onload = function(e) {
-                    const bookData = {
-                        title: titleInput.value,
-                        content: e.target.result // PDF en base64
-                    };
-                    
-                    library.push(bookData);
-                    localStorage.setItem('myBooks', JSON.stringify(library)); // Guardar permanentemente
-                    
-                    alert("¡Libro publicado correctamente!");
-                    titleInput.value = "";
-                    fileInput.value = "";
-                    switchView('user'); // Ir a ver el resultado
-                };
-                reader.readAsDataURL(file);
-            } else {
-                alert("Completa el título y selecciona un PDF.");
-            }
-        }
+      <header style={{ display: 'flex', justifyContent: 'space-between' }}>
 
-        // Mostrar libros al usuario
-        function renderLibrary() {
-            const container = document.getElementById('library-container');
-            container.innerHTML = "";
+        <h1>🌌 Bienvenido a Lectuverso</h1>
 
-            if (library.length === 0) {
-                container.innerHTML = "<p>No hay libros. Ve al modo administrador para subir uno.</p>";
-                return;
-            }
+        <button onClick={logout}>Salir</button>
 
-            library.forEach((book, index) => {
-                container.innerHTML += `
-                    <div class="book-card" onclick="openBook(${index})">
-                        <span class="book-icon">📕</span>
-                        <strong>${book.title}</strong>
-                        <p style="font-size: 12px; color: #666;">Diseño PDF Original</p>
-                    </div>
-                `;
-            });
-        }
+      </header>
 
-        // Lector de PDF (Renderizado fiel al diseño)
-        async function openBook(index) {
-            const modal = document.getElementById('reader-modal');
-            const viewer = document.getElementById('pdf-viewer');
-            modal.style.display = "block";
-            viewer.innerHTML = "<p style='color:white'>Abriendo diseño original...</p>";
 
-            const pdfData = atob(library[index].content.split(',')[1]);
-            const loadingTask = pdfjsLib.getDocument({data: pdfData});
-            
-            try {
-                const pdf = await loadingTask.promise;
-                viewer.innerHTML = ""; // Limpiar
 
-                for (let i = 1; i <= pdf.numPages; i++) {
-                    const page = await pdf.getPage(i);
-                    const viewport = page.getViewport({scale: 1.2});
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
-                    
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
-                    
-                    await page.render({canvasContext: context, viewport: viewport}).promise;
-                    viewer.appendChild(canvas);
-                }
-            } catch (e) {
-                alert("Error al cargar el PDF");
-            }
-        }
+      {/* SECCIÓN MODIFICABLE: Puedes cambiar el diseño de la cuadrícula aquí */}
 
-        function closeReader() {
-            document.getElementById('reader-modal').style.display = "none";
-        }
+      <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '20px', marginTop: '20px' }}>
 
-        // Carga inicial
-        renderLibrary();
-    </script>
-</body>
-</html>
+        {books.map(book => (
+
+          <div key={book.id} style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '15px', textAlign: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
+
+            <div style={{ height: '150px', backgroundColor: '#e2e2e2', marginBottom: '10px' }}>🖼️ Portada</div>
+
+            <h4 style={{ margin: '5px 0' }}>{book.title}</h4>
+
+            <p style={{ fontSize: '12px', color: '#666' }}>Tipo: {book.type}</p>
+
+            <button style={{ backgroundColor: '#007bff', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '4px', cursor: 'pointer' }}>
+
+              Leer ahora
+
+            </button>
+
+          </div>
+
+        ))}
+
+      </section>
+
+    </div>
+
+  );
+
+};
