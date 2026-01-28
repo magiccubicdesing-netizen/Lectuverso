@@ -8,25 +8,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
         .view { display: none; }
-        .view.active { display: block; animation: fadeIn 0.3s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .view.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        #pdf-render-container { background: #1e293b; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 25px; }
-        canvas { box-shadow: 0 20px 50px rgba(0,0,0,0.5); max-width: 100%; height: auto !important; border-radius: 8px; background: white; }
+        #pdf-render-container { background: #334155; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 25px; }
+        canvas { box-shadow: 0 15px 35px rgba(0,0,0,0.4); max-width: 100%; height: auto !important; border-radius: 4px; background: white; }
         
-        .nav-btn { transition: all 0.3s; border-radius: 12px; padding: 10px 20px; font-weight: 700; font-size: 14px; }
-        .nav-btn.active { background: #fbbf24; color: #000; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3); }
+        .nav-btn { transition: all 0.2s; border-radius: 8px; padding: 8px 16px; font-weight: 600; font-size: 14px; }
+        .nav-btn.active { background: #fbbf24; color: #000; }
 
         #support-modal { 
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            transform: scale(0.8) translateY(40px); 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            transform: translateY(20px); 
             opacity: 0; 
             pointer-events: none; 
         }
         #support-modal.active { 
-            transform: scale(1) translateY(0); 
+            transform: translateY(0); 
             opacity: 1; 
             pointer-events: auto; 
         }
@@ -34,91 +34,88 @@
 </head>
 <body class="bg-slate-50">
 
-    <nav class="bg-slate-900 text-white p-4 sticky top-0 z-50 shadow-2xl">
+    <nav class="bg-slate-900 text-white p-4 sticky top-0 z-50 shadow-md">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-black text-yellow-500 tracking-tighter italic">LECTUVERSO</h1>
-            <div class="flex gap-3">
-                <button onclick="switchView('user')" id="btn-user" class="nav-btn bg-slate-800 hover:bg-slate-700 active">📚 Libros</button>
-                <button onclick="switchView('admin')" id="btn-admin" class="nav-btn bg-slate-800 hover:bg-slate-700">⚙️ Panel</button>
+            <h1 class="text-xl font-black text-yellow-500 tracking-tighter">LECTUVERSO</h1>
+            <div class="flex gap-2">
+                <button onclick="switchView('user')" id="btn-user" class="nav-btn bg-slate-800 hover:bg-slate-700 active"> Biblioteca</button>
+                <button onclick="switchView('admin')" id="btn-admin" class="nav-btn bg-slate-800 hover:bg-slate-700"> Admin</button>
             </div>
         </div>
     </nav>
 
     <div id="view-admin" class="view p-6 max-w-4xl mx-auto">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-3xl font-black text-slate-800 tracking-tight">Administración</h2>
-            <div class="flex gap-2">
-                <button onclick="exportData()" class="text-[10px] bg-blue-600 text-white p-2 rounded-lg font-bold">Descargar Backup</button>
-                <label class="text-[10px] bg-purple-600 text-white p-2 rounded-lg font-bold cursor-pointer">
-                    Cargar Backup <input type="file" id="import-db" class="hidden" onchange="importData(event)">
-                </label>
-            </div>
-        </div>
-
-        <div class="bg-white p-8 rounded-3xl shadow-xl border border-slate-200">
-            <h3 class="text-lg font-bold mb-6 flex items-center gap-2">🚀 Subir nuevo ejemplar</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input type="text" id="book-title" placeholder="Nombre del libro..." class="w-full border-2 border-slate-100 p-4 rounded-2xl outline-none focus:border-yellow-500 transition">
-                <select id="book-category" class="w-full border-2 border-slate-100 p-4 rounded-2xl outline-none focus:border-yellow-500 transition">
-                    <option value="">Categoría</option>
+        <h2 class="text-3xl font-bold mb-6 text-slate-800">Panel de Administración</h2>
+        <div class="bg-white p-8 rounded-2xl shadow-xl border border-slate-200">
+            <h3 class="text-lg font-bold mb-4"> Publicar Nuevo E-Book</h3>
+            <div class="space-y-4">
+                <input type="text" id="book-title" placeholder="Título del Libro" class="w-full border p-3 rounded-xl outline-none focus:border-yellow-500 transition">
+                <select id="book-category" class="w-full border p-3 rounded-xl outline-none focus:border-yellow-500 transition">
+                    <option value="">Seleccionar Categoría</option>
                     <option>Amor</option><option>Misterio</option><option>Terror</option><option>Autoayuda</option><option>Ciencia Ficción</option><option>Tecnología</option>
                 </select>
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-bold text-slate-400 mb-2 ml-2">ARCHIVO PDF</label>
-                    <input type="file" id="book-file" accept="application/pdf" class="w-full border-2 border-dashed border-slate-200 p-8 rounded-3xl bg-slate-50 text-center cursor-pointer hover:bg-slate-100 transition">
-                </div>
-                <button onclick="uploadBook()" class="md:col-span-2 bg-emerald-500 text-white py-5 rounded-2xl font-black text-xl hover:bg-emerald-600 transition transform active:scale-95 shadow-lg shadow-emerald-200">PUBLICAR LIBRO</button>
+                <input type="file" id="book-file" accept="application/pdf" class="w-full border p-3 rounded-xl bg-slate-50">
+                <button onclick="uploadBook()" class="w-full bg-emerald-500 text-white py-4 rounded-xl font-bold text-lg hover:bg-emerald-600 transition shadow-lg">Publicar Ahora</button>
             </div>
         </div>
     </div>
 
     <div id="view-user" class="view active p-6 max-w-6xl mx-auto">
-        <h2 class="text-3xl font-black mb-8 text-slate-800 tracking-tight">Catálogo Reciente</h2>
-        <div id="library-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"></div>
+        <h2 class="text-3xl font-bold mb-8 text-slate-800">Catálogo de Lectura</h2>
+        <div id="library-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
     </div>
 
-    <div id="reader-modal" class="fixed inset-0 bg-slate-950 hidden z-[100] flex flex-col">
-        <div class="bg-slate-900 p-4 flex justify-between items-center text-white">
-            <div class="flex items-center gap-4">
-                <div class="bg-yellow-500 text-black p-2 rounded-lg font-black text-xs">PDF</div>
-                <h3 id="reader-book-name" class="font-bold truncate max-w-[200px] md:max-w-md"></h3>
+    <div id="reader-modal" class="fixed inset-0 bg-black/95 hidden z-[100] flex flex-col">
+        <div class="bg-slate-900 p-4 flex justify-between items-center text-white border-b border-white/10">
+            <div>
+                <h3 id="reader-book-name" class="font-bold text-yellow-500"></h3>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Lector Lectuverso</p>
             </div>
-            <button onclick="closeReader()" class="bg-white/10 hover:bg-red-500 w-10 h-10 rounded-full flex items-center justify-center transition">✕</button>
+            <button onclick="closeReader()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg font-bold transition">Cerrar ✕</button>
         </div>
-        <div class="flex-grow overflow-y-auto bg-slate-800">
+        <div class="flex-grow overflow-y-auto">
             <div id="pdf-render-container"></div>
-            <div id="paywall" class="hidden bg-white text-slate-900 p-12 m-8 rounded-[40px] max-w-md mx-auto text-center shadow-2xl border-t-8 border-yellow-500">
-                <span class="text-5xl">🔒</span>
-                <h2 class="text-3xl font-black mt-4 mb-2">Lectura Limitada</h2>
-                <p class="text-slate-500 mb-8 font-medium">Estás leyendo una muestra gratuita. Para obtener el libro completo, contacta a soporte.</p>
-                <button onclick="contactSupport()" class="w-full bg-slate-900 text-yellow-500 py-5 rounded-2xl font-black text-lg hover:bg-black transition shadow-xl">ADQUIRIR VERSIÓN COMPLETA</button>
+            
+            <div id="paywall" class="hidden bg-white text-slate-900 p-10 m-10 rounded-3xl max-w-lg mx-auto text-center shadow-2xl relative z-10">
+                <h2 class="text-2xl font-black mb-2 uppercase">📖 Muestra Finalizada</h2>
+                <p class="text-slate-500 mb-6">Te has quedado en lo mejor. Adquiere la versión completa para terminar esta historia.</p>
+                
+                <button onclick="processPayment()" class="w-full bg-emerald-500 text-white py-4 rounded-xl font-bold uppercase hover:bg-emerald-600 transition shadow-lg mb-4">
+                    💳 Pagar y Desbloquear
+                </button>
+                
+                <button onclick="contactSupport()" class="text-xs text-slate-400 underline hover:text-slate-600">
+                    ¿Dudas con el pago? Habla con nosotros
+                </button>
             </div>
         </div>
     </div>
 
     <div class="fixed bottom-6 right-6 z-[100] flex flex-col items-end">
-        <div id="support-modal" class="mb-4 w-72 bg-white rounded-[32px] shadow-2xl border border-slate-100 overflow-hidden">
-            <div class="bg-slate-900 p-6 text-white text-center">
-                <div class="w-16 h-16 bg-yellow-500 rounded-full mx-auto mb-3 flex items-center justify-center text-2xl">🎧</div>
-                <h4 class="text-xl font-black tracking-tight">¿Necesitas ayuda?</h4>
-                <p class="text-xs text-slate-400 mt-1 uppercase font-bold tracking-widest">Soporte Lectuverso</p>
+        <div id="support-modal" class="mb-4 w-72 md:w-80 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+            <div class="bg-slate-900 p-4 text-white">
+                <p class="text-[10px] font-bold text-yellow-500 uppercase">Ayuda en línea</p>
+                <h4 class="text-lg font-bold">Soporte Lectuverso</h4>
             </div>
-            <div class="p-6 flex flex-col gap-3">
-                <button onclick="contactSupport()" class="flex items-center justify-center gap-2 w-full bg-green-500 text-white py-4 rounded-2xl font-black hover:bg-green-600 transition shadow-lg shadow-green-100">
-                    WHATSAPP DIRECTO
-                </button>
-                <a href="mailto:magiccubicdesing@gmail.com" class="text-center text-xs font-bold text-slate-400 hover:text-slate-800 transition">📧 magiccubicdesing@gmail.com</a>
+            <div class="p-5 space-y-4">
+                <p class="text-xs text-slate-500">¿Tienes problemas con un libro o tu pago? Escríbenos directamente.</p>
+                <div class="flex flex-col gap-2">
+                    <a href="mailto:magiccubicdesing@gmail.com?subject=Soporte%20Lectuverso" class="flex items-center justify-center gap-2 w-full bg-slate-900 text-white py-3 rounded-xl text-xs font-bold hover:bg-slate-800 transition">
+                         Enviar Gmail
+                    </a>
+                    <button onclick="contactSupport()" class="flex items-center justify-center gap-2 w-full bg-green-500 text-white py-3 rounded-xl text-xs font-bold hover:bg-green-600 transition">
+                         WhatsApp Soporte
+                    </button>
+                </div>
             </div>
         </div>
-        <button onclick="toggleSupport()" class="bg-yellow-500 hover:bg-yellow-400 text-black w-16 h-16 rounded-full shadow-2xl flex items-center justify-center text-3xl transition-all active:scale-90 hover:rotate-12 border-4 border-white">
-            🎧
+        <button onclick="toggleSupport()" class="bg-yellow-500 hover:bg-yellow-400 text-black w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-2xl transition-transform active:scale-95">
+            💬
         </button>
     </div>
 
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
-        
-        // Base de datos local
         let library = JSON.parse(localStorage.getItem('lectuverso_db')) || [];
         let currentOpenBook = null;
 
@@ -134,11 +131,24 @@
             document.getElementById('support-modal').classList.toggle('active');
         }
 
+        // LÓGICA DE PAGO
+        function processPayment() {
+            if (!currentOpenBook) return;
+            // Aquí conectarías con Stripe, PayPal o MercadoPago
+            alert(`Iniciando proceso de pago para: ${currentOpenBook.title}.\n(Aquí integrarás tu pasarela de pago real)`);
+        }
+
+        // SOPORTE VÍA WHATSAPP (Se mantiene el sistema original)
         function contactSupport() {
             const phoneNumber = "573022822216";
-            let msg = "Hola Lectuverso, me gustaría comprar un libro.";
-            if (currentOpenBook) msg = `Hola, quiero comprar el libro completo: *${currentOpenBook.title}*`;
-            window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+            let message = "Hola Lectuverso, necesito ayuda con la plataforma.";
+            
+            if (currentOpenBook) {
+                message = `Hola, tengo una consulta sobre el libro: *${currentOpenBook.title}*.`;
+            }
+            
+            const wpUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(wpUrl, '_blank');
         }
 
         function uploadBook() {
@@ -146,83 +156,65 @@
             const category = document.getElementById('book-category').value;
             const file = document.getElementById('book-file').files[0];
 
-            if (!title || !file) return alert("Por favor, llena todos los campos.");
+            if (!title || !file) return alert("Completa los datos.");
 
             const reader = new FileReader();
-            reader.readAsDataURL(file);
             reader.onload = function(e) {
-                const bookData = {
-                    id: Date.now(),
-                    title: title.toUpperCase(),
-                    category: category || 'GENERAL',
-                    pdfBase64: e.target.result
-                };
-                library.push(bookData);
-                saveAndRefresh();
-                alert("¡Libro publicado con éxito!");
-                document.getElementById('book-title').value = '';
+                library.push({ id: Date.now(), title, category, pdfBase64: e.target.result });
+                localStorage.setItem('lectuverso_db', JSON.stringify(library));
+                alert("¡Publicado!");
                 switchView('user');
             };
-        }
-
-        function saveAndRefresh() {
-            localStorage.setItem('lectuverso_db', JSON.stringify(library));
-            renderLibrary();
+            reader.readAsDataURL(file);
         }
 
         function renderLibrary() {
             const grid = document.getElementById('library-grid');
-            grid.innerHTML = "";
-            
-            if (library.length === 0) {
-                grid.innerHTML = `<div class="col-span-full py-20 text-center text-slate-400 font-bold">No hay libros disponibles todavía.</div>`;
-                return;
-            }
-
+            grid.innerHTML = library.length ? "" : "<p class='col-span-full text-center opacity-50'>Biblioteca vacía.</p>";
             library.forEach(book => {
                 grid.innerHTML += `
-                    <div class="bg-white rounded-[32px] overflow-hidden shadow-sm border border-slate-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 cursor-pointer group" onclick="openBook(${book.id})">
-                        <div class="h-48 bg-slate-100 flex items-center justify-center text-5xl group-hover:bg-yellow-50 transition-colors">📖</div>
-                        <div class="p-5">
-                            <span class="text-[10px] font-black text-yellow-600 uppercase tracking-widest">${book.category}</span>
-                            <h4 class="font-bold text-slate-800 mt-1 truncate">${book.title}</h4>
-                            <div class="mt-4 flex items-center justify-between">
-                                <span class="text-[10px] font-bold text-slate-400 italic">Lectuverso ©</span>
-                                <button class="bg-slate-900 text-white p-2 rounded-xl text-[10px] font-bold group-hover:bg-yellow-500 group-hover:text-black transition">LEER</button>
-                            </div>
-                        </div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border hover:shadow-md transition cursor-pointer group" onclick="openBook(${book.id})">
+                        <div class="h-32 bg-slate-50 rounded-xl mb-4 flex items-center justify-center text-3xl group-hover:bg-yellow-50">📖</div>
+                        <h4 class="font-bold text-slate-800 truncate text-sm">${book.title}</h4>
+                        <p class="text-[10px] text-yellow-600 font-black uppercase mb-3">${book.category || 'General'}</p>
+                        <button class="w-full bg-slate-900 text-white py-2 rounded-lg text-[10px] font-bold group-hover:bg-yellow-500 group-hover:text-black transition">LEER AHORA</button>
                     </div>`;
             });
         }
 
         async function openBook(id) {
             const book = library.find(b => b.id === id);
-            currentOpenBook = book;
+            currentOpenBook = book; 
             document.getElementById('reader-book-name').innerText = book.title;
             document.getElementById('reader-modal').classList.remove('hidden');
             document.getElementById('paywall').classList.add('hidden');
             document.body.style.overflow = 'hidden';
             
             const container = document.getElementById('pdf-render-container');
-            container.innerHTML = `<div class="py-20 text-white font-bold animate-pulse text-center">PREPARANDO LECTURA...</div>`;
+            container.innerHTML = '<p class="text-white py-10 animate-pulse">Cargando...</p>';
 
-            const bytes = Uint8Array.from(atob(book.pdfBase64.split(',')[1]), c => c.charCodeAt(0));
-            const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
-            
-            container.innerHTML = "";
-            for (let n = 1; n <= pdf.numPages; n++) {
-                if (n > 2) { 
-                    document.getElementById('paywall').classList.remove('hidden');
-                    break; 
+            try {
+                const base64 = book.pdfBase64.split(',')[1];
+                const bytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+                const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
+                
+                container.innerHTML = "";
+                for (let n = 1; n <= pdf.numPages; n++) {
+                    if (n > 2) { 
+                        document.getElementById('paywall').classList.remove('hidden');
+                        break; 
+                    }
+                    const page = await pdf.getPage(n);
+                    const viewport = page.getViewport({ scale: 1.5 });
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    await page.render({ canvasContext: context, viewport: viewport }).promise;
+                    container.appendChild(canvas);
                 }
-                const page = await pdf.getPage(n);
-                const viewport = page.getViewport({ scale: window.innerWidth < 768 ? 0.8 : 1.5 });
-                const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
-                await page.render({ canvasContext: context, viewport: viewport }).promise;
-                container.appendChild(canvas);
+            } catch (err) {
+                container.innerHTML = '<p class="text-red-400">Error al cargar el PDF.</p>';
             }
         }
 
@@ -230,27 +222,6 @@
             currentOpenBook = null;
             document.getElementById('reader-modal').classList.add('hidden');
             document.body.style.overflow = 'auto';
-        }
-
-        // FUNCIONES DE BACKUP (Para que no se pierdan tus libros)
-        function exportData() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(library));
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href",     dataStr);
-            downloadAnchorNode.setAttribute("download", "lectuverso_backup.json");
-            document.body.appendChild(downloadAnchorNode);
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
-        }
-
-        function importData(event) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                library = JSON.parse(e.target.result);
-                saveAndRefresh();
-                alert("¡Base de datos cargada!");
-            };
-            reader.readAsText(event.target.files[0]);
         }
 
         window.onload = renderLibrary;
