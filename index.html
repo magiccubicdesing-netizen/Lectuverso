@@ -19,7 +19,7 @@
         .nav-btn { transition: all 0.2s; border-radius: 8px; padding: 8px 16px; font-weight: 600; font-size: 14px; }
         .nav-btn.active { background: #fbbf24 !important; color: #000 !important; }
 
-        /* Invisibilidad inicial del botón Admin */
+        /* El botón admin es invisible por defecto con máxima prioridad */
         #btn-admin { display: none !important; }
     </style>
 </head>
@@ -27,7 +27,7 @@
 
     <nav class="bg-slate-900 text-white p-4 sticky top-0 z-50 shadow-md">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <h1 id="logo-secret" onclick="secretClickTrigger()" class="text-xl font-black text-yellow-500 tracking-tighter cursor-default select-none">LECTUVERSO</h1>
+            <h1 id="logo-secret" onclick="secretClickTrigger()" class="text-xl font-black text-yellow-500 tracking-tighter cursor-default select-none transition-all duration-300">LECTUVERSO</h1>
             <div class="flex gap-2">
                 <button onclick="switchView('user')" id="btn-user" class="nav-btn bg-slate-800 hover:bg-slate-700 active"> Biblioteca</button>
                 <button onclick="switchView('admin')" id="btn-admin" class="nav-btn bg-slate-800 hover:bg-slate-700"> Admin</button>
@@ -102,11 +102,26 @@
         let library = JSON.parse(localStorage.getItem('lectuverso_db')) || [];
         let isAdminAuthenticated = false;
 
-        // --- LÓGICA DE REVELACIÓN MAESTRA (INTEGRADA Y OPTIMIZADA) ---
+        // --- LÓGICA DE REVELACIÓN MAESTRA (INTEGRACIÓN CÓDIGO 1) ---
         function revealAdmin() {
             const btn = document.getElementById('btn-admin');
-            if (btn.style.display !== 'block') {
+            const logo = document.getElementById('logo-secret');
+            
+            // Confirmación visual en el logo
+            logo.classList.add('text-white', 'scale-110');
+            setTimeout(() => logo.classList.remove('text-white', 'scale-110'), 500);
+
+            if (btn) {
                 btn.style.setProperty('display', 'block', 'important');
                 btn.classList.add('animate-bounce');
+                console.log("Sistema: Acceso secreto activado.");
                 setTimeout(() => btn.classList.remove('animate-bounce'), 2000);
-                console.log("
+            }
+        }
+
+        // DETECCIÓN TECLADO: Ignora teclas especiales (Shift, Alt, etc.)
+        let inputBuffer = "";
+        document.addEventListener('keydown', (e) => {
+            if (e.key.length === 1) { // Solo caracteres simples
+                inputBuffer += e.key.toLowerCase();
+                if (inputBuffer.
