@@ -19,7 +19,7 @@
         .nav-btn { transition: all 0.2s; border-radius: 8px; padding: 8px 16px; font-weight: 600; font-size: 14px; }
         .nav-btn.active { background: #fbbf24 !important; color: #000 !important; }
 
-        /* Estado inicial: Oculto total */
+        /* Invisibilidad inicial del botón Admin */
         #btn-admin { display: none !important; }
     </style>
 </head>
@@ -102,143 +102,11 @@
         let library = JSON.parse(localStorage.getItem('lectuverso_db')) || [];
         let isAdminAuthenticated = false;
 
-        // --- LÓGICA DE REVELACIÓN MAESTRA ---
+        // --- LÓGICA DE REVELACIÓN MAESTRA (INTEGRADA Y OPTIMIZADA) ---
         function revealAdmin() {
-            console.log("Admin Revelado");
             const btn = document.getElementById('btn-admin');
-            btn.style.setProperty('display', 'block', 'important');
-            btn.classList.add('animate-bounce'); // Un pequeño rebote para avisar
-            setTimeout(() => btn.classList.remove('animate-bounce'), 1000);
-        }
-
-        // 1. Detección por Teclado (Incluso si escribes en un input)
-        let inputBuffer = "";
-        document.addEventListener('keydown', (e) => {
-            inputBuffer += e.key.toLowerCase();
-            if (inputBuffer.includes("admin")) {
-                revealAdmin();
-                inputBuffer = "";
-            }
-            if (inputBuffer.length > 20) inputBuffer = inputBuffer.substring(10);
-        }, true);
-
-        // 2. Detección por Pegado (Paste)
-        document.addEventListener('paste', (e) => {
-            const text = (e.clipboardData || window.clipboardData).getData('text');
-            if (text.toLowerCase().trim() === "admin") {
-                revealAdmin();
-            }
-        }, true);
-
-        // 3. Plan B: Triple clic en el Logo
-        let clickCount = 0;
-        function secretClickTrigger() {
-            clickCount++;
-            if (clickCount >= 3) {
-                revealAdmin();
-                clickCount = 0;
-            }
-            setTimeout(() => clickCount = 0, 2000); // Reinicia si no hace los 3 clics rápido
-        }
-
-        // --- FUNCIONES DE NAVEGACIÓN ---
-        function switchView(view) {
-            if (view === 'admin' && !isAdminAuthenticated) view = 'login';
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            
-            document.getElementById('view-' + view).classList.add('active');
-            const btn = (view === 'login') ? 'btn-admin' : 'btn-' + view;
-            document.getElementById(btn).classList.add('active');
-            if(view === 'user') renderLibrary();
-        }
-
-        function checkCredentials() {
-            const u = document.getElementById('login-user').value;
-            const p = document.getElementById('login-pass').value;
-            if (u === "Lectuverso2026" && p === "Lectuverso2026") {
-                isAdminAuthenticated = true;
-                switchView('admin');
-            } else {
-                alert("Incorrecto");
-            }
-        }
-
-        function logout() {
-            isAdminAuthenticated = false;
-            document.getElementById('btn-admin').style.setProperty('display', 'none', 'important');
-            switchView('user');
-        }
-
-        // --- GESTIÓN DE LIBROS ---
-        function uploadBook() {
-            const title = document.getElementById('book-title').value;
-            const category = document.getElementById('book-category').value;
-            const limit = document.getElementById('book-limit').value;
-            const file = document.getElementById('book-file').files[0];
-
-            if (!title || !file || !limit) return alert("Faltan datos");
-
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                library.push({ id: Date.now(), title, category, limit: parseInt(limit), pdfBase64: e.target.result });
-                localStorage.setItem('lectuverso_db', JSON.stringify(library));
-                alert("¡Libro Guardado!");
-                switchView('user');
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function renderLibrary() {
-            const grid = document.getElementById('library-grid');
-            grid.innerHTML = library.length ? "" : "<p class='col-span-full text-center'>No hay libros.</p>";
-            library.forEach(book => {
-                grid.innerHTML += `
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border cursor-pointer hover:border-yellow-500 transition" onclick="openBook(${book.id})">
-                        <div class="h-32 bg-slate-100 rounded-xl mb-4 flex items-center justify-center text-3xl">📖</div>
-                        <h4 class="font-bold text-slate-800 truncate">${book.title}</h4>
-                        <p class="text-xs text-yellow-600 font-bold uppercase">${book.category || 'General'}</p>
-                    </div>`;
-            });
-        }
-
-        async function openBook(id) {
-            const book = library.find(b => b.id === id);
-            document.getElementById('reader-book-name').innerText = book.title;
-            document.getElementById('reader-modal').classList.remove('hidden');
-            document.getElementById('paywall').classList.add('hidden');
-            
-            const container = document.getElementById('pdf-render-container');
-            container.innerHTML = '<p class="text-white text-center py-10">Cargando...</p>';
-
-            try {
-                const base64 = book.pdfBase64.split(',')[1];
-                const bytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
-                const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
-                container.innerHTML = "";
-                
-                for (let n = 1; n <= pdf.numPages; n++) {
-                    if (n > book.limit) {
-                        document.getElementById('paywall').classList.remove('hidden');
-                        break;
-                    }
-                    const page = await pdf.getPage(n);
-                    const viewport = page.getViewport({ scale: 1.5 });
-                    const canvas = document.createElement('canvas');
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
-                    await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
-                    container.appendChild(canvas);
-                }
-            } catch (e) { alert("Error al abrir"); }
-        }
-
-        function closeReader() {
-            document.getElementById('reader-modal').classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        }
-
-        window.onload = renderLibrary;
-    </script>
-</body>
-</html>
+            if (btn.style.display !== 'block') {
+                btn.style.setProperty('display', 'block', 'important');
+                btn.classList.add('animate-bounce');
+                setTimeout(() => btn.classList.remove('animate-bounce'), 2000);
+                console.log("
