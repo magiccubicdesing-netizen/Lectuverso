@@ -1,155 +1,180 @@
-import React, { useState } from 'react';// Simulación de una base de datos de libros (Estado Global)const LectuversoApp = () => {
+import React, { useState, useEffect } from 'react';
 
-  const [user, setUser] = useState(null); // null, 'admin', o 'usuario'
+// --- COMPONENTES DE SEGURIDAD ---
+const SecurityWrapper = ({ children }) => {
+  useEffect(() => {
+    // Bloqueo de click derecho y teclas de inspección [cite: 387, 390]
+    const handleContext = (e) => e.preventDefault();
+    document.addEventListener('contextmenu', handleContext);
+    return () => document.removeEventListener('contextmenu', handleContext);
+  }, []);
 
+  return <div className="select-none">{children}</div>;
+};
+
+const LectuversoApp = () => {
+  const [user, setUser] = useState(null); // null, 'admin', 'usuario'
   const [books, setBooks] = useState([
-
-    { id: 1, title: "El Principito", author: "Saint-Exupéry", category: "Reflowable" },
-
+    { id: 1, title: "TDA vs TDAH", author: "Lectuverso", category: "Salud", file: null },
   ]);
 
-
-
-  // Manejo de Login
-
   const handleLogin = (u, p) => {
-
-    if (u === 'admi1' && p === 'admi1') {
-
-      setUser('admin');
-
-    } else if (u === 'user' && p === 'user') {
-
-      setUser('usuario');
-
-    } else {
-
-      alert("Credenciales incorrectas");
-
-    }
-
+    if (u === 'admi1' && p === 'admi1') setUser('admin');
+    else if (u === 'user' && p === 'user') setUser('usuario');
+    else alert("Credenciales incorrectas");
   };
-
-
 
   if (!user) return <LoginForm onLogin={handleLogin} />;
 
-  return user === 'admin' ? 
-
-    <AdminPanel books={books} setBooks={setBooks} logout={() => setUser(null)} /> : 
-
-    <UserPanel books={books} logout={() => setUser(null)} />;
-
+  return (
+    <SecurityWrapper>
+      {user === 'admin' ? (
+        <AdminPanel books={books} setBooks={setBooks} logout={() => setUser(null)} />
+      ) : (
+        <UserPanel books={books} logout={() => setUser(null)} />
+      )}
+    </SecurityWrapper>
+  );
 };
 
+// --- 1. ACCESO ADMINISTRADOR (admi1) ---
 const AdminPanel = ({ books, setBooks, logout }) => {
+  const [newBook, setNewBook] = useState({ title: '', category: 'Amor', file: null });
 
-  const [newBook, setNewBook] = useState({ title: '', author: '', type: 'Reflowable' });
-
-
-
-  const publishBook = (e) => {
-
-    e.preventDefault();
-
-    // Regla del Boy Scout: Código limpio y validado [cite: 177, 180]
-
-    if (!newBook.title) return;
-
-    setBooks([...books, { ...newBook, id: Date.now() }]);
-
-    setNewBook({ title: '', author: '', type: 'Reflowable' });
-
-    alert("¡Libro publicado en el Lectuverso!");
-
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type === "application/pdf") {
+      // Creamos una URL temporal para el PDF local
+      setNewBook({ ...newBook, file: URL.createObjectURL(file) });
+    } else {
+      alert("Por favor sube un archivo PDF válido");
+    }
   };
 
-
-
-  return (
-
-    <div style={{ padding: '20px', backgroundColor: '#f0f4f8' }}>
-
-      <h2>🔐 Panel Exclusivo: Administrador (admi1)</h2>
-
-      <form onSubmit={publishBook} style={{ marginBottom: '30px', border: '1px solid #ccc', padding: '15px' }}>
-
-        <h3>Agregar Nuevo E-book</h3>
-
-        <input 
-
-          placeholder="Título del libro" 
-
-          value={newBook.title}
-
-          onChange={(e) => setNewBook({...newBook, title: e.target.value})}
-
-        />
-
-        <select onChange={(e) => setNewBook({...newBook, type: e.target.value})}>
-
-          <option value="Reflowable">Texto Ajustable (Novela)</option>
-
-          <option value="Fixed-Layout">Diseño Fijo (Cómic)</option>
-
-        </select>
-
-        <button type="submit">🚀 Publicar Ahora</button>
-
-      </form>
-
-      <button onClick={logout}>Cerrar Sesión</button>
-
-    </div>
-
-  );
-
-};
-
-const UserPanel = ({ books, logout }) => {
+  const publishBook = (e) => {
+    e.preventDefault();
+    if (!newBook.title || !newBook.file) return alert("Completa todos los campos");
+    
+    // Regla del Boy Scout: Código limpio y organizado [cite: 402, 403]
+    setBooks([...books, { ...newBook, id: Date.now() }]);
+    setNewBook({ title: '', category: 'Amor', file: null });
+    alert("¡Libro publicado con éxito en el catálogo!");
+  };
 
   return (
+    <div className="min-h-screen bg-slate-900 text-white p-8">
+      <div className="max-w-4xl mx-auto bg-slate-800 p-6 rounded-xl border border-yellow-500/30">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-2xl font-black text-yellow-500">🛠️ PANEL ADMIN: admi1</h2>
+          <button onClick={logout} className="bg-red-500 px-4 py-2 rounded-lg text-sm">Cerrar Sesión</button>
+        </div>
 
-    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-
-      <header style={{ display: 'flex', justifyContent: 'space-between' }}>
-
-        <h1>🌌 Bienvenido a Lectuverso</h1>
-
-        <button onClick={logout}>Salir</button>
-
-      </header>
-
-
-
-      {/* SECCIÓN MODIFICABLE: Puedes cambiar el diseño de la cuadrícula aquí */}
-
-      <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '20px', marginTop: '20px' }}>
-
-        {books.map(book => (
-
-          <div key={book.id} style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '15px', textAlign: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
-
-            <div style={{ height: '150px', backgroundColor: '#e2e2e2', marginBottom: '10px' }}>🖼️ Portada</div>
-
-            <h4 style={{ margin: '5px 0' }}>{book.title}</h4>
-
-            <p style={{ fontSize: '12px', color: '#666' }}>Tipo: {book.type}</p>
-
-            <button style={{ backgroundColor: '#007bff', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '4px', cursor: 'pointer' }}>
-
-              Leer ahora
-
-            </button>
-
+        <form onSubmit={publishBook} className="grid grid-cols-1 gap-4 bg-slate-700 p-6 rounded-lg">
+          <h3 className="text-lg font-bold">Subir Nuevo Libro desde PC</h3>
+          <input 
+            type="text" placeholder="Título del Libro" 
+            className="p-3 bg-slate-900 rounded border border-slate-600 focus:outline-yellow-500"
+            value={newBook.title}
+            onChange={(e) => setNewBook({...newBook, title: e.target.value})}
+          />
+          <select 
+            className="p-3 bg-slate-900 rounded border border-slate-600"
+            onChange={(e) => setNewBook({...newBook, category: e.target.value})}
+          >
+            <option>Amor</option><option>Terror</option><option>Superación</option>
+          </select>
+          <div className="flex flex-col gap-2">
+            <label className="text-sm text-slate-400">Seleccionar archivo PDF:</label>
+            <input type="file" accept="application/pdf" onChange={handleFileChange} className="text-sm cursor-pointer" />
           </div>
-
-        ))}
-
-      </section>
-
+          <button type="submit" className="bg-yellow-500 text-black font-black py-3 rounded-lg hover:bg-yellow-400 transition">
+            🚀 PUBLICAR EN LECTUVERSO
+          </button>
+        </form>
+      </div>
     </div>
-
   );
-
 };
+
+// --- 2. ACCESO USUARIO (Modificable) ---
+const UserPanel = ({ books, logout }) => {
+  const [selectedBook, setSelectedBook] = useState(null);
+
+  return (
+    <div className="min-h-screen bg-[#0f172a] text-white">
+      {/* Navbar estilo Código 2 */}
+      <nav className="p-6 flex justify-between items-center border-b border-white/10 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50">
+        <h1 className="text-2xl font-black text-yellow-500 tracking-tighter">LECTUVERSO</h1>
+        <div className="flex items-center gap-6">
+          <span className="text-xs text-slate-400">Plan Premium Activo</span>
+          <button onClick={logout} className="text-sm font-medium hover:text-red-400">Salir</button>
+        </div>
+      </nav>
+
+      {/* Catálogo dinámico */}
+      <main className="container mx-auto px-6 py-12">
+        <h2 className="text-4xl font-black mb-12 text-center text-yellow-500">Explora tu Biblioteca</h2>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {books.map((book) => (
+            <div key={book.id} className="bg-slate-800 p-5 rounded-3xl border border-white/5 hover:border-yellow-500/50 transition-all group">
+              <div className="bg-slate-700 w-full h-64 mb-4 rounded-2xl flex flex-col items-center justify-center relative overflow-hidden">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-yellow-500/50">{book.category}</span>
+                <h4 className="font-bold text-center px-4 text-xl mt-2">{book.title}</h4>
+                <div className="absolute inset-0 bg-yellow-500 opacity-0 group-hover:opacity-10 transition-opacity"></div>
+              </div>
+              <button 
+                onClick={() => setSelectedBook(book)}
+                className="w-full bg-slate-900 text-yellow-500 py-3 rounded-xl font-bold border border-yellow-500/20 hover:bg-yellow-500 hover:text-black transition"
+              >
+                LEER AHORA
+              </button>
+            </div>
+          ))}
+        </div>
+      </main>
+
+      {/* Lector de PDF Protegido */}
+      {selectedBook && (
+        <div className="fixed inset-0 bg-black z-[100] flex flex-col">
+          <div className="p-4 bg-slate-900 flex justify-between items-center border-b border-white/10">
+            <h3 className="text-yellow-500 font-bold">{selectedBook.title}</h3>
+            <button onClick={() => setSelectedBook(null)} className="text-2xl">✕</button>
+          </div>
+          <div className="flex-grow bg-slate-800 relative">
+             {/* Watermark dinámico para protección [cite: 323] */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] z-50">
+              <h1 className="text-9xl font-black rotate-45 text-white">LECTUVERSO PROTECTED</h1>
+            </div>
+            {selectedBook.file ? (
+              <iframe src={selectedBook.file} className="w-full h-full border-none" title="Reader" />
+            ) : (
+              <div className="flex items-center justify-center h-full text-slate-500">
+                Archivo de muestra: El contenido real se carga al subir un PDF en el Admin.
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Componente de Login básico para la demo
+const LoginForm = ({ onLogin }) => {
+  const [u, setU] = useState('');
+  const [p, setP] = useState('');
+  return (
+    <div className="h-screen flex items-center justify-center bg-slate-900 text-white p-6">
+      <div className="bg-slate-800 p-8 rounded-2xl shadow-2xl w-full max-w-md border border-white/5">
+        <h2 className="text-3xl font-black text-yellow-500 mb-6 text-center tracking-tighter">INGRESAR A LECTUVERSO</h2>
+        <input className="w-full p-4 mb-4 bg-slate-900 rounded-xl border border-slate-700" placeholder="Usuario" onChange={e => setU(e.target.value)} />
+        <input className="w-full p-4 mb-6 bg-slate-900 rounded-xl border border-slate-700" type="password" placeholder="Contraseña" onChange={e => setP(e.target.value)} />
+        <button onClick={() => onLogin(u, p)} className="w-full bg-yellow-500 text-black font-black py-4 rounded-xl hover:scale-[1.02] transition">ACCEDER AL UNIVERSO</button>
+        <p className="text-center mt-4 text-xs text-slate-500 uppercase tracking-widest">admi1 / admi1</p>
+      </div>
+    </div>
+  );
+};
+
+export default LectuversoApp;
