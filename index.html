@@ -18,10 +18,19 @@
         
         .nav-btn { transition: all 0.2s; border-radius: 8px; padding: 8px 16px; font-weight: 600; font-size: 14px; }
         .nav-btn.active { background: #fbbf24; color: #000; }
-        
-        /* Widget de Soporte */
-        #support-modal { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform: translateY(10px); opacity: 0; pointer-events: none; }
-        #support-modal.active { transform: translateY(0); opacity: 1; pointer-events: auto; }
+
+        /* Estilos del Soporte */
+        #support-modal { 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            transform: translateY(20px); 
+            opacity: 0; 
+            pointer-events: none; 
+        }
+        #support-modal.active { 
+            transform: translateY(0); 
+            opacity: 1; 
+            pointer-events: auto; 
+        }
     </style>
 </head>
 <body class="bg-slate-50">
@@ -39,13 +48,12 @@
     <div id="view-admin" class="view p-6 max-w-4xl mx-auto">
         <h2 class="text-3xl font-bold mb-6 text-slate-800">Panel de Administración</h2>
         <div class="bg-white p-8 rounded-2xl shadow-xl border border-slate-200">
-            <h3 class="text-lg font-bold mb-4">➕ Publicar Nuevo E-Book</h3>
+            <h3 class="text-lg font-bold mb-4">📖 Publicar Nuevo E-Book</h3>
             <div class="space-y-4">
                 <input type="text" id="book-title" placeholder="Título del Libro" class="w-full border p-3 rounded-xl outline-none focus:border-yellow-500 transition">
                 <select id="book-category" class="w-full border p-3 rounded-xl outline-none focus:border-yellow-500 transition">
                     <option value="">Seleccionar Categoría</option>
-                    <option>Amor</option><option>Misterio</option><option>Terror</option><option>Autoayuda</option><option>Ciencia Ficción</option>
-                    <option>Historia</option><option>Cocina</option><option>Negocios</option><option>Infantil</option><option>Poesía</option>
+                    <option>Amor</option><option>Misterio</option><option>Terror</option><option>Autoayuda</option><option>Ciencia Ficción</option><option>Tecnología</option>
                 </select>
                 <input type="file" id="book-file" accept="application/pdf" class="w-full border p-3 rounded-xl bg-slate-50">
                 <button onclick="uploadBook()" class="w-full bg-emerald-500 text-white py-4 rounded-xl font-bold text-lg hover:bg-emerald-600 transition shadow-lg">Publicar Ahora</button>
@@ -62,24 +70,16 @@
         <div class="bg-slate-900 p-4 flex justify-between items-center text-white border-b border-white/10">
             <div>
                 <h3 id="reader-book-name" class="font-bold text-yellow-500"></h3>
-                <p id="reader-status" class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Modo Lectura Completa</p>
+                <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Lector Lectuverso</p>
             </div>
             <button onclick="closeReader()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg font-bold transition">Cerrar ✕</button>
         </div>
-        <div class="flex-grow overflow-y-auto" id="reader-scroll">
+        <div class="flex-grow overflow-y-auto">
             <div id="pdf-render-container"></div>
             <div id="paywall" class="hidden bg-white text-slate-900 p-10 m-10 rounded-3xl max-w-lg mx-auto text-center shadow-2xl relative z-10">
-                <h2 class="text-2xl font-black mb-4 uppercase text-red-600">Lectura Limitada</h2>
-                <p class="text-slate-500 mb-6">Para continuar leyendo las páginas restantes, completa el pago de acceso.</p>
-                <div class="space-y-4 text-left">
-                    <select id="payment-method" class="w-full border p-3 rounded-xl bg-slate-50">
-                        <option>Bancolombia / Nequi</option>
-                        <option>PayPal / Binance Pay</option>
-                        <option>Tarjeta Crédito/Débito</option>
-                    </select>
-                    <input type="text" placeholder="Número de cuenta o tarjeta" class="w-full border p-3 rounded-xl">
-                    <button onclick="alert('Procesando pago...')" class="w-full bg-yellow-500 text-black py-4 rounded-xl font-bold uppercase hover:bg-yellow-400">Desbloquear Libro</button>
-                </div>
+                <h2 class="text-2xl font-black mb-4 uppercase">Contenido Bloqueado</h2>
+                <p class="text-slate-500 mb-6">Disfruta la versión completa pagando este ejemplar.</p>
+                <button onclick="alert('Sistema de pago próximamente')" class="w-full bg-yellow-500 text-black py-4 rounded-xl font-bold uppercase hover:bg-yellow-400">Desbloquear E-Book</button>
             </div>
         </div>
     </div>
@@ -87,26 +87,23 @@
     <div class="fixed bottom-6 right-6 z-[100] flex flex-col items-end">
         <div id="support-modal" class="mb-4 w-72 md:w-80 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
             <div class="bg-slate-900 p-4 text-white">
-                <p class="text-xs font-bold text-yellow-500 uppercase tracking-widest">Soporte Lectuverso</p>
-                <h4 class="text-lg font-bold">¿Necesitas ayuda?</h4>
+                <p class="text-[10px] font-bold text-yellow-500 uppercase">Ayuda en línea</p>
+                <h4 class="text-lg font-bold">Soporte Lectuverso</h4>
             </div>
-            <div class="p-4 space-y-3">
-                <div class="text-xs text-slate-500 mb-2">Preguntas frecuentes:</div>
-                <details class="bg-slate-50 rounded-lg p-2 text-xs cursor-pointer border border-slate-100">
-                    <summary class="font-bold">¿Mi pago es seguro?</summary>
-                    <p class="mt-1">Usamos encriptación SSL para proteger tus datos bancarios internacionalmente.</p>
-                </details>
-                <details class="bg-slate-50 rounded-lg p-2 text-xs cursor-pointer border border-slate-100">
-                    <summary class="font-bold">¿Cómo leo en mi celular?</summary>
-                    <p class="mt-1">Nuestra biblioteca es 100% responsiva; puedes leer desde cualquier navegador móvil.</p>
-                </details>
-                <div class="pt-2 border-t flex flex-col gap-2">
-                    <a href="https://wa.me/tu_numero" class="w-full bg-green-500 text-white text-center py-2 rounded-lg text-xs font-bold hover:bg-green-600 transition">WhatsApp Directo</a>
-                    <a href="mailto:soporte@lectuverso.com" class="w-full bg-slate-100 text-slate-600 text-center py-2 rounded-lg text-xs font-bold hover:bg-slate-200 transition">Enviar Email</a>
+            <div class="p-5 space-y-4">
+                <p class="text-xs text-slate-500">¿Tienes problemas con un libro o tu pago? Escríbenos directamente.</p>
+                <div class="flex flex-col gap-2">
+                    <a href="mailto:magiccubicdesing@gmail.com?subject=Soporte%20Lectuverso&body=Hola%20equipo%20de%20Lectuverso,%20tengo%20la%20siguiente%20consulta:" 
+                       class="flex items-center justify-center gap-2 w-full bg-slate-900 text-white py-3 rounded-xl text-xs font-bold hover:bg-slate-800 transition">
+                        📧 Enviar Gmail Directo
+                    </a>
+                    <a href="https://wa.me/tu_numero" target="_blank" class="flex items-center justify-center gap-2 w-full bg-green-500 text-white py-3 rounded-xl text-xs font-bold hover:bg-green-600 transition">
+                        💬 WhatsApp Soporte
+                    </a>
                 </div>
             </div>
         </div>
-        <button onclick="toggleSupport()" class="bg-yellow-500 hover:bg-yellow-400 text-black w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-2xl transition-transform active:scale-90">
+        <button onclick="toggleSupport()" class="bg-yellow-500 hover:bg-yellow-400 text-black w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-2xl transition-transform active:scale-95">
             🎧
         </button>
     </div>
@@ -132,13 +129,13 @@
             const category = document.getElementById('book-category').value;
             const file = document.getElementById('book-file').files[0];
 
-            if (!title || !file) return alert("Por favor, llena todos los campos.");
+            if (!title || !file) return alert("Completa los datos.");
 
             const reader = new FileReader();
             reader.onload = function(e) {
                 library.push({ id: Date.now(), title, category, pdfBase64: e.target.result });
                 localStorage.setItem('lectuverso_db', JSON.stringify(library));
-                alert("¡Libro publicado con éxito!");
+                alert("¡Publicado!");
                 switchView('user');
             };
             reader.readAsDataURL(file);
@@ -146,14 +143,14 @@
 
         function renderLibrary() {
             const grid = document.getElementById('library-grid');
-            grid.innerHTML = library.length ? "" : "<div class='col-span-full text-center py-10 opacity-50 italic'>La biblioteca está esperando contenido...</div>";
+            grid.innerHTML = library.length ? "" : "<p class='col-span-full text-center opacity-50'>Biblioteca vacía.</p>";
             library.forEach(book => {
                 grid.innerHTML += `
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border hover:border-yellow-500 transition-all cursor-pointer group" onclick="openBook(${book.id})">
-                        <div class="h-40 bg-slate-50 rounded-xl mb-4 flex items-center justify-center text-4xl group-hover:bg-yellow-50 transition-colors">📘</div>
-                        <h4 class="font-bold text-slate-800 truncate">${book.title}</h4>
-                        <p class="text-[10px] text-yellow-600 font-black uppercase tracking-widest mb-3">${book.category || 'General'}</p>
-                        <button class="w-full bg-slate-900 text-white py-2 rounded-lg text-xs font-bold group-hover:bg-yellow-500 group-hover:text-black transition-all">LEER AHORA</button>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border hover:shadow-md transition cursor-pointer group" onclick="openBook(${book.id})">
+                        <div class="h-32 bg-slate-50 rounded-xl mb-4 flex items-center justify-center text-3xl group-hover:bg-yellow-50">📖</div>
+                        <h4 class="font-bold text-slate-800 truncate text-sm">${book.title}</h4>
+                        <p class="text-[10px] text-yellow-600 font-black uppercase mb-3">${book.category || 'General'}</p>
+                        <button class="w-full bg-slate-900 text-white py-2 rounded-lg text-[10px] font-bold group-hover:bg-yellow-500 group-hover:text-black transition">LEER AHORA</button>
                     </div>`;
             });
         }
@@ -166,21 +163,20 @@
             document.body.style.overflow = 'hidden';
             
             const container = document.getElementById('pdf-render-container');
-            container.innerHTML = `<p class="text-white py-10 animate-pulse font-bold text-sm">Abriendo páginas del servidor Lectuverso...</p>`;
+            container.innerHTML = `<p class="text-white py-10 animate-pulse">Cargando...</p>`;
 
             const base64 = book.pdfBase64.split(',')[1];
             const bytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
             const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
             
             container.innerHTML = "";
-
             for (let n = 1; n <= pdf.numPages; n++) {
-                if (n > 2) { // Límite de 2 páginas
+                if (n > 2) { 
                     document.getElementById('paywall').classList.remove('hidden');
                     break; 
                 }
                 const page = await pdf.getPage(n);
-                const viewport = page.getViewport({ scale: 1.5 });
+                const viewport = page.getViewport({ scale: 1.3 });
                 const canvas = document.createElement('canvas');
                 const context = canvas.getContext('2d');
                 canvas.height = viewport.height;
