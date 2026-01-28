@@ -3,307 +3,228 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lectuverso | Sistema de Lectura PDF</title>
+    <title>Lectuverso | Admin & Biblioteca</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Crimson+Pro:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --accent: #fbbf24;
-            --bg-dark: #0f172a;
-        }
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: var(--bg-dark); 
-            color: white;
-            margin: 0;
-        }
-        .hidden { display: none; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .view { display: none; }
+        .view.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        /* Contenedor de renderizado de PDF */
-        #pdf-viewer-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2rem;
-            padding: 2rem;
-            background: #334155;
-        }
-        canvas {
-            max-width: 100%;
-            height: auto !important;
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.5);
-            border-radius: 4px;
-        }
+        #pdf-render-container { background: #525659; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+        canvas { box-shadow: 0 10px 25px rgba(0,0,0,0.3); max-width: 100%; height: auto !important; border-radius: 4px; }
         
-        /* Estilos de scrollbar personalizados */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #1e293b; }
-        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
-
-        .category-chip {
-            transition: all 0.2s;
-            cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .category-chip:hover {
-            background: var(--accent);
-            color: black;
-        }
+        .nav-btn { transition: all 0.2s; border-radius: 8px; padding: 8px 16px; font-weight: 600; font-size: 14px; }
+        .nav-btn.active { background: #fbbf24; color: #000; }
     </style>
 </head>
-<body>
+<body class="bg-slate-50">
 
-    <!-- Barra de Navegación -->
-    <nav class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur border-b border-white/10 p-4 flex justify-between items-center">
-        <div class="flex items-center gap-2">
-            <div class="bg-yellow-500 text-black p-1 rounded font-black text-xl">L</div>
-            <h1 class="text-2xl font-black tracking-tighter text-yellow-500">LECTUVERSO</h1>
-        </div>
-        <div class="flex items-center gap-6">
-            <div class="flex flex-col items-end">
-                <span id="role-display" class="text-[10px] uppercase font-bold text-slate-400 tracking-widest">Modo: Usuario</span>
-                <button onclick="toggleView()" class="text-xs font-bold text-yellow-500 hover:underline">CAMBIAR ROL</button>
+    <!-- BARRA DE NAVEGACIÓN -->
+    <nav class="bg-slate-900 text-white p-4 sticky top-0 z-50 shadow-md">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-black text-yellow-500 tracking-tighter">LECTUVERSO</h1>
+            <div class="flex gap-2">
+                <button onclick="switchView('user')" id="btn-user" class="nav-btn bg-slate-800 hover:bg-slate-700 active">📚 Mi Biblioteca</button>
+                <button onclick="switchView('admin')" id="btn-admin" class="nav-btn bg-slate-800 hover:bg-slate-700">⚙️ Administrador</button>
             </div>
         </div>
     </nav>
 
     <!-- VISTA ADMINISTRADOR -->
-    <main id="view-admin" class="hidden p-8 max-w-4xl mx-auto min-h-screen">
-        <header class="mb-8 text-center">
-            <h2 class="text-4xl font-black mb-2">Panel de Carga</h2>
-            <p class="text-slate-400">Sube archivos PDF para que estén disponibles en la biblioteca.</p>
-        </header>
-
-        <div class="bg-slate-800 p-8 rounded-3xl border border-white/10 shadow-2xl">
-            <div class="space-y-6">
+    <div id="view-admin" class="view p-6 max-w-4xl mx-auto">
+        <h2 class="text-3xl font-bold mb-6 text-slate-800">Panel de Administración</h2>
+        <div class="bg-white p-8 rounded-2xl shadow-xl border border-slate-200">
+            <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                <span class="bg-yellow-500 p-1 rounded">➕</span> Subir Nuevo E-Book
+            </h3>
+            <p class="text-sm text-slate-500 mb-6">Completa los datos para publicar el libro en la biblioteca digital.</p>
+            
+            <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-bold mb-2 text-slate-300">Título del Libro</label>
-                    <input type="text" id="input-title" placeholder="Ej: El Principito" class="w-full bg-slate-900 border border-white/10 p-4 rounded-2xl focus:ring-2 focus:ring-yellow-500 outline-none transition">
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Título del Libro</label>
+                    <input type="text" id="book-title" placeholder="Ej: ¿De qué estamos hablando? El mundo del TDAH" class="w-full border border-slate-200 p-3 rounded-xl outline-none focus:border-yellow-500 transition">
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-bold mb-2 text-slate-300">Género / Categoría</label>
-                    <select id="input-category" class="w-full bg-slate-900 border border-white/10 p-4 rounded-2xl focus:ring-2 focus:ring-yellow-500 outline-none">
-                        <option>Autoayuda</option>
-                        <option>Misterio</option>
-                        <option>Ciencia Ficción</option>
-                        <option>Terror</option>
-                        <option>Amor</option>
-                        <option>Historia</option>
-                    </select>
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Archivo PDF</label>
+                    <input type="file" id="book-file" accept="application/pdf" class="w-full border border-slate-200 p-3 rounded-xl bg-slate-50 cursor-pointer">
                 </div>
 
-                <div class="relative border-2 border-dashed border-white/20 rounded-2xl p-12 text-center hover:border-yellow-500 transition-colors">
-                    <input type="file" id="input-file" accept="application/pdf" class="absolute inset-0 opacity-0 cursor-pointer" onchange="handleFileLabel(this)">
-                    <div class="space-y-2">
-                        <span class="text-5xl block">📥</span>
-                        <p id="file-label" class="text-slate-400 font-medium">Haz clic o arrastra el archivo PDF aquí</p>
-                    </div>
-                </div>
-
-                <button onclick="publishBook()" class="w-full bg-yellow-500 text-black py-5 rounded-2xl font-black text-xl hover:bg-yellow-400 transform active:scale-95 transition">
-                    PUBLICAR LIBRO
+                <button onclick="uploadBook()" class="w-full bg-emerald-500 text-white py-4 rounded-xl font-bold text-lg hover:bg-emerald-600 transition shadow-lg shadow-emerald-200 active:scale-95">
+                    Publicar en Biblioteca
                 </button>
             </div>
         </div>
-    </main>
+    </div>
 
     <!-- VISTA USUARIO -->
-    <main id="view-user" class="p-8 max-w-7xl mx-auto min-h-screen">
-        <div class="flex flex-wrap gap-2 mb-12 justify-center" id="cat-list">
-            <!-- JS Populates -->
+    <div id="view-user" class="view active p-6 max-w-6xl mx-auto">
+        <h2 class="text-3xl font-bold mb-8 text-slate-800">Mi Biblioteca Digital</h2>
+        <div id="library-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Los libros aparecerán aquí -->
         </div>
-
-        <h2 class="text-3xl font-black mb-8">Mi Biblioteca</h2>
-        <div id="catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <!-- Libros se cargan aquí -->
-        </div>
-    </main>
+    </div>
 
     <!-- LECTOR MODAL -->
-    <div id="modal-reader" class="fixed inset-0 z-[100] bg-slate-950 hidden flex flex-col">
-        <nav class="bg-slate-900 p-4 border-b border-white/10 flex justify-between items-center">
+    <div id="reader-modal" class="fixed inset-0 bg-black/90 hidden z-[100] flex flex-col">
+        <div class="bg-slate-900 p-4 flex justify-between items-center text-white border-b border-white/10">
             <div>
-                <h3 id="reader-book-title" class="font-bold text-yellow-500 text-lg leading-none">Leyendo...</h3>
-                <span class="text-[10px] text-slate-500 uppercase font-bold">Diseño original completo</span>
+                <h3 id="reader-book-name" class="font-bold text-yellow-500">Leyendo libro...</h3>
+                <p id="reader-status" class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Cargando diseño original</p>
             </div>
-            <button onclick="closeReader()" class="bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white px-4 py-2 rounded-xl transition font-bold">
-                Cerrar ✕
-            </button>
-        </nav>
-        
-        <div id="pdf-scroll-area" class="flex-grow overflow-y-auto bg-slate-800">
-            <div id="pdf-viewer-content">
-                <!-- Canvases de las páginas aquí -->
+            <button onclick="closeReader()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg font-bold transition">Cerrar ✕</button>
+        </div>
+        <div class="flex-grow overflow-y-auto" id="reader-scroll">
+            <div id="pdf-render-container">
+                <!-- Canvases de las páginas -->
             </div>
         </div>
     </div>
 
     <script>
-        // Inicialización de PDF.js
+        // Configuración de PDF.js
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
 
-        // Estado Global
-        let isUserMode = true;
-        let library = JSON.parse(localStorage.getItem('lectuverso_storage')) || [];
-        const categories = ["Todos", "Autoayuda", "Misterio", "Ciencia Ficción", "Terror", "Amor", "Historia"];
+        // Base de datos persistente
+        let library = JSON.parse(localStorage.getItem('lectuverso_db')) || [];
 
-        // UI Helpers
-        function init() {
-            const catList = document.getElementById('cat-list');
-            categories.forEach(cat => {
-                catList.innerHTML += `<span class="category-chip px-6 py-2 rounded-full text-xs font-bold bg-white/5 border border-white/10">${cat}</span>`;
-            });
-            renderCatalog();
+        // Cambiar entre vistas
+        function switchView(view) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById('view-' + view).classList.add('active');
+            document.getElementById('btn-' + view).classList.add('active');
+            
+            if(view === 'user') renderLibrary();
         }
 
-        function toggleView() {
-            isUserMode = !isUserMode;
-            document.getElementById('role-display').innerText = isUserMode ? "Modo: Usuario" : "Modo: Administrador";
-            document.getElementById('view-admin').classList.toggle('hidden', isUserMode);
-            document.getElementById('view-user').classList.toggle('hidden', !isUserMode);
-            if(isUserMode) renderCatalog();
-        }
+        // Función para subir libro
+        function uploadBook() {
+            const titleInput = document.getElementById('book-title');
+            const fileInput = document.getElementById('book-file');
 
-        function handleFileLabel(input) {
-            const label = document.getElementById('file-label');
-            if(input.files.length > 0) {
-                label.innerText = `Archivo seleccionado: ${input.files[0].name}`;
-                label.classList.replace('text-slate-400', 'text-yellow-500');
-            }
-        }
-
-        // Lógica de Publicación
-        function publishBook() {
-            const titleInput = document.getElementById('input-title');
-            const catInput = document.getElementById('input-category');
-            const fileInput = document.getElementById('input-file');
-
-            if(!titleInput.value || fileInput.files.length === 0) {
-                return alert("Completa el título y selecciona un PDF.");
+            if (!titleInput.value || fileInput.files.length === 0) {
+                alert("Por favor, ingresa el título y selecciona un archivo PDF.");
+                return;
             }
 
             const file = fileInput.files[0];
             const reader = new FileReader();
 
             reader.onload = function(e) {
-                const newBook = {
+                const bookData = {
                     id: Date.now(),
                     title: titleInput.value,
-                    category: catInput.value,
-                    data: e.target.result // El PDF en Base64
+                    pdfBase64: e.target.result // El contenido del PDF
                 };
 
-                library.push(newBook);
-                localStorage.setItem('lectuverso_storage', JSON.stringify(library));
-                
-                // Reset
-                titleInput.value = "";
-                fileInput.value = "";
-                document.getElementById('file-label').innerText = "Haz clic o arrastra el archivo PDF aquí";
+                library.push(bookData);
+                localStorage.setItem('lectuverso_db', JSON.stringify(library));
                 
                 alert("¡Libro publicado correctamente!");
-                toggleView(); // Ir a ver el resultado
+                
+                // Limpiar y volver a la biblioteca
+                titleInput.value = "";
+                fileInput.value = "";
+                switchView('user');
             };
+
             reader.readAsDataURL(file);
         }
 
-        // Lógica de Renderizado del Catálogo
-        function renderCatalog() {
-            const grid = document.getElementById('catalog-grid');
+        // Mostrar libros en la biblioteca
+        function renderLibrary() {
+            const grid = document.getElementById('library-grid');
             grid.innerHTML = "";
 
-            if(library.length === 0) {
-                grid.innerHTML = `<div class="col-span-full py-20 text-center opacity-30 font-bold">No hay libros en tu colección.</div>`;
+            if (library.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-20 text-center border-2 border-dashed border-slate-200 rounded-3xl">
+                        <p class="text-slate-400 font-medium italic">Tu biblioteca está vacía. Ve a Administrador para agregar tu primer libro.</p>
+                    </div>
+                `;
                 return;
             }
 
             library.forEach(book => {
                 grid.innerHTML += `
-                    <div class="group bg-slate-800 p-5 rounded-3xl border border-white/5 hover:border-yellow-500/50 transition-all cursor-pointer shadow-xl" onclick="readBook(${book.id})">
-                        <div class="aspect-[3/4] bg-slate-900 rounded-2xl mb-4 flex flex-col items-center justify-center text-yellow-500 group-hover:scale-[1.02] transition-transform">
-                            <span class="text-6xl mb-2">📕</span>
-                            <span class="text-[10px] font-black uppercase tracking-widest bg-yellow-500/10 px-2 py-1 rounded">PDF Original</span>
+                    <div class="bg-white p-4 rounded-2xl shadow-md border border-slate-100 hover:shadow-xl transition-all cursor-pointer group" onclick="openBook(${book.id})">
+                        <div class="aspect-[3/4] bg-slate-100 rounded-xl mb-4 flex flex-col items-center justify-center text-slate-300 group-hover:bg-yellow-50 transition-colors">
+                            <span class="text-5xl group-hover:scale-110 transition-transform">📕</span>
+                            <span class="text-[10px] mt-2 font-bold uppercase tracking-tighter text-slate-400">Diseño Original PDF</span>
                         </div>
-                        <h4 class="font-black text-xl truncate">${book.title}</h4>
-                        <div class="flex justify-between items-center mt-2">
-                            <span class="text-xs text-slate-500 font-bold uppercase tracking-wider">${book.category}</span>
-                            <span class="text-[10px] bg-yellow-500 text-black px-2 py-1 rounded-lg font-black">LEER</span>
-                        </div>
+                        <h4 class="font-bold text-slate-800 leading-tight mb-2 truncate">${book.title}</h4>
+                        <button class="w-full bg-slate-900 text-white py-2 rounded-lg text-xs font-bold group-hover:bg-yellow-500 group-hover:text-black transition-colors">LEER LIBRO</button>
                     </div>
                 `;
             });
         }
 
-        // Lógica del Lector PDF (Renderizado Completo)
-        async function readBook(id) {
+        // Lector de PDF Pro
+        async function openBook(id) {
             const book = library.find(b => b.id === id);
-            if(!book) return;
+            if (!book) return;
 
-            const modal = document.getElementById('modal-reader');
-            const viewer = document.getElementById('pdf-viewer-content');
-            const titleLabel = document.getElementById('reader-book-title');
-
+            const modal = document.getElementById('reader-modal');
+            const container = document.getElementById('pdf-render-container');
+            const status = document.getElementById('reader-status');
+            
+            document.getElementById('reader-book-name').innerText = book.title;
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
-            titleLabel.innerText = `Abriendo: ${book.title}...`;
-            viewer.innerHTML = `<div class="py-20 text-center"><p class="text-yellow-500 font-bold animate-pulse">Cargando todas las páginas del diseño original...</p></div>`;
+            container.innerHTML = `<p class="text-white font-bold animate-pulse py-20">Procesando páginas originales...</p>`;
 
             try {
-                // Convertir Base64 a ArrayBuffer para PDF.js
-                const base64Data = book.data.split(',')[1];
-                const binaryStr = atob(base64Data);
-                const bytes = new Uint8Array(binaryStr.length);
-                for (let i = 0; i < binaryStr.length; i++) {
-                    bytes[i] = binaryStr.charCodeAt(i);
+                // Convertir Base64 a datos binarios para PDF.js
+                const base64 = book.pdfBase64.split(',')[1];
+                const binary = atob(base64);
+                const bytes = new Uint8Array(binary.length);
+                for (let i = 0; i < binary.length; i++) {
+                    bytes[i] = binary.charCodeAt(i);
                 }
 
                 const loadingTask = pdfjsLib.getDocument({ data: bytes });
                 const pdf = await loadingTask.promise;
                 
-                viewer.innerHTML = ""; // Limpiar mensaje de carga
+                container.innerHTML = ""; // Limpiar cargador
 
-                // Renderizar cada página del PDF de forma secuencial
-                for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-                    const page = await pdf.getPage(pageNum);
-                    const scale = 1.5; // Ajuste de nitidez
-                    const viewport = page.getViewport({ scale: scale });
-
+                // Renderizamos TODAS las páginas una tras otra
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    status.innerText = `Página ${i} de ${pdf.numPages} - Renderizando...`;
+                    
+                    const page = await pdf.getPage(i);
+                    const viewport = page.getViewport({ scale: 1.5 });
                     const canvas = document.createElement('canvas');
                     const context = canvas.getContext('2d');
+                    
                     canvas.height = viewport.height;
                     canvas.width = viewport.width;
-
-                    const renderContext = {
-                        canvasContext: context,
-                        viewport: viewport
-                    };
                     
-                    await page.render(renderContext).promise;
-                    viewer.appendChild(canvas);
-                    
-                    // Actualizar el título con el progreso
-                    titleLabel.innerText = `${book.title} (${pageNum} de ${pdf.numPages} págs)`;
+                    await page.render({ canvasContext: context, viewport: viewport }).promise;
+                    container.appendChild(canvas);
                 }
                 
-                titleLabel.innerText = book.title;
-
+                status.innerText = "Lectura completa disponible";
+                
             } catch (err) {
                 console.error(err);
-                alert("Error al procesar el archivo PDF original.");
+                alert("Error al abrir el PDF. Es posible que el archivo sea demasiado pesado o esté dañado.");
                 closeReader();
             }
         }
 
         function closeReader() {
-            document.getElementById('modal-reader').classList.add('hidden');
+            document.getElementById('reader-modal').classList.add('hidden');
             document.body.style.overflow = 'auto';
-            document.getElementById('pdf-viewer-content').innerHTML = "";
+            document.getElementById('pdf-render-container').innerHTML = "";
         }
 
-        // Iniciar
-        init();
+        // Al cargar la página, mostrar biblioteca
+        window.onload = renderLibrary;
     </script>
 </body>
 </html>
